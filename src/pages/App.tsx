@@ -1,13 +1,19 @@
-import { ThemeDropdown } from '@/components/ThemeDropdown'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { Button } from '@/components/ui/button'
+import EVM from './EVM'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <EVM />,
+  },
+])
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="theme">
-      <p className="text-red-700">hello laika</p>
-      <Button>Click me</Button>
-      <ThemeDropdown />
+      <RouterProvider router={router} />
     </ThemeProvider>
   )
 }
