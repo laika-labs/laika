@@ -1,11 +1,14 @@
+import { ThemeDropdown } from '@/components/ThemeDropdown'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import { Button } from '@/components/ui/button'
 
 function App() {
   return (
-    <div>
+    <ThemeProvider defaultTheme="system" storageKey="theme">
       <p className="text-red-700">hello laika</p>
       <Button>Click me</Button>
-    </div>
+      <ThemeDropdown />
+    </ThemeProvider>
   )
 }
 
