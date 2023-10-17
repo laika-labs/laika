@@ -1,4 +1,3 @@
-import { ThemeDropdown } from '@/components/ThemeDropdown'
 import { Button } from '@/components/ui/button'
 
 export default function EVM() {
@@ -6,7 +5,6 @@ export default function EVM() {
     <>
       <p className="text-red-700">hello laika</p>
       <Button>Click me</Button>
-      <ThemeDropdown />
     </>
   )
 }

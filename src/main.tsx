@@ -1,3 +1,4 @@
+import 'allotment/dist/style.css'
 import '@/styles/index.css'
 
 import React from 'react'
