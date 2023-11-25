@@ -1,4 +1,4 @@
-import { Allotment, LayoutPriority } from 'allotment'
+import { Allotment } from 'allotment'
 import { Outlet } from 'react-router-dom'
 
 import Footer from '@/components/Footer'
@@ -7,16 +7,16 @@ import Sidenav from '@/components/Sidenav'
 
 export default function Root() {
   return (
-    <Allotment vertical className="w-screen h-screen">
+    <Allotment className="w-screen h-screen" vertical>
       <Allotment.Pane minSize={48} maxSize={48} className="flex">
         <Header />
       </Allotment.Pane>
       <Allotment.Pane>
-        <Allotment proportionalLayout={false}>
-          <Allotment.Pane key="activityBar" minSize={80} maxSize={80}>
+        <Allotment defaultSizes={[80, 80]}>
+          <Allotment.Pane minSize={80} maxSize={80}>
             <Sidenav />
           </Allotment.Pane>
-          <Allotment.Pane key="content" minSize={300} priority={LayoutPriority.High}>
+          <Allotment.Pane>
             <Outlet />
           </Allotment.Pane>
         </Allotment>

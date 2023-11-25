@@ -24,6 +24,7 @@
     --input: 240 5.9% 90%;
     --ring: 346.8 77.2% 49.8%;
     --radius: 0.3rem;
+    --separator-border: hsl(var(--border));
   }
  
   .dark {
