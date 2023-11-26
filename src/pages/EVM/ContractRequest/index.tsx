@@ -23,8 +23,14 @@ export default function ContractRequest() {
     <Allotment vertical proportionalLayout={false}>
       <Allotment.Pane minSize={48} maxSize={48} priority={LayoutPriority.Low} className="flex">
         {tabs.map((tab) => {
-          const name = findItemInCollections(collections, tab)?.name
+          const found = findItemInCollections(collections, tab)
+          if (found === undefined) {
+            removeTab(tab)
+          }
+
+          const name = found?.name
           const isActive = activeTabId === tab
+
           return (
             <Button
               key={tab}
