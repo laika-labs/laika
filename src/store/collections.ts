@@ -45,7 +45,8 @@ export const useEVMCollectionStore = create<{
   renameItem: (id: UUID, name: string) => void
   toggleOpen: (id: UUID) => void
   addFolder: (id: UUID) => void
-  addSmartContract: (id: UUID) => void
+  addSmartContract: (id: UUID, cb: (contract: EVMContract) => void) => void
+  updateContractAddress: (id: UUID, address: string) => void
   removeItem: (id: UUID) => void
 }>()(
   persist(
@@ -111,7 +112,7 @@ export const useEVMCollectionStore = create<{
             collections: state.collections,
           }
         }),
-      addSmartContract: (id: UUID) =>
+      addSmartContract: (id: UUID, cb: (contract: EVMContract) => void) =>
         set((state) => {
           const contract: EVMContract = {
             id: crypto.randomUUID(),
@@ -124,6 +125,20 @@ export const useEVMCollectionStore = create<{
 
           if (item && item.type !== EVMItemType.SmartContract) {
             item.items.push(contract)
+          }
+
+          cb(contract)
+
+          return {
+            collections: state.collections,
+          }
+        }),
+      updateContractAddress: (id: UUID, address: string) =>
+        set((state) => {
+          const item = findItemInCollections(state.collections, id)
+
+          if (item && item.type === EVMItemType.SmartContract) {
+            item.contract.address = address
           }
 
           return {

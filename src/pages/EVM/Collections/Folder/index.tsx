@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { EVMCollection, EVMFolder, EVMItemType, useEVMCollectionStore } from '@/store/collections'
+import { useEVMTabStore } from '@/store/tabs'
 
 import Rename from './Rename'
 import SmartContract from './SmartContract'
@@ -30,6 +31,7 @@ export default function Folder({ folder, level = 0 }: CollectionProps) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const { toggleOpen, addFolder, addSmartContract, removeCollection, removeItem } = useEVMCollectionStore()
+  const { addTab, setActiveTab } = useEVMTabStore()
 
   const handleToggleOpen = () => {
     if (isRenaming) return
@@ -37,7 +39,10 @@ export default function Folder({ folder, level = 0 }: CollectionProps) {
   }
 
   const handleAddSmartContract = () => {
-    addSmartContract(folder.id)
+    addSmartContract(folder.id, (smartContract) => {
+      addTab(smartContract.id)
+      setActiveTab(smartContract.id)
+    })
   }
 
   const handleAddFolder = () => {

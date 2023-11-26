@@ -16,7 +16,9 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 import { EVMContract, useEVMCollectionStore } from '@/store/collections'
+import { useEVMTabStore } from '@/store/tabs'
 
 import Rename from './Rename'
 
@@ -30,6 +32,12 @@ export default function SmartContract({ smartContract, level }: SmartContractPro
   const [isDeleting, setIsDeleting] = useState(false)
 
   const { removeItem } = useEVMCollectionStore()
+  const { activeTabId, addTab, removeTab, setActiveTab } = useEVMTabStore()
+
+  const handleOpen = () => {
+    addTab(smartContract.id)
+    setActiveTab(smartContract.id)
+  }
 
   const handleToggleRename = debounce(() => {
     setIsRenaming((isRenaming) => !isRenaming)
@@ -40,17 +48,18 @@ export default function SmartContract({ smartContract, level }: SmartContractPro
   }
 
   const handleRemoveItem = () => {
+    removeTab(smartContract.id)
     removeItem(smartContract.id)
     handleToggleDelete()
   }
 
   return (
-    <div className="flex hover:bg-muted/60">
+    <div className={cn('flex', activeTabId === smartContract.id ? 'bg-muted' : 'hover:bg-muted/60')}>
       {times(level, (index) => (
         <div key={index} className="ml-4 w-0.5 bg-muted-foreground/30"></div>
       ))}
       <div className="flex flex-1 px-2 truncate">
-        <div className="flex items-center justify-center flex-1 min-w-0 gap-2 cursor-pointer">
+        <div className="flex items-center justify-center flex-1 min-w-0 gap-2 cursor-pointer" onClick={handleOpen}>
           <Badge className="p-0.5">Contract</Badge>
           <div className="flex flex-1 truncate select-none">
             {isRenaming ? (
