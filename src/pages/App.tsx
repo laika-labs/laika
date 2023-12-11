@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { Toaster } from '@/components/ui/toaster'
 
 import EVM from './EVM'
 import Root from './Root'
@@ -17,6 +18,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="theme">
       <RouterProvider router={router} />
+      <Toaster />
     </ThemeProvider>
   )
 }

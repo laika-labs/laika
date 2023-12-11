@@ -14,6 +14,7 @@ export interface EVMContract {
   id: UUID
   name: string
   type: EVMItemType.SmartContract
+  chainId?: number
   contract: {
     address?: string
     abi?: string
@@ -46,7 +47,9 @@ export const useEVMCollectionStore = create<{
   toggleOpen: (id: UUID) => void
   addFolder: (id: UUID) => void
   addSmartContract: (id: UUID, cb: (contract: EVMContract) => void) => void
+  updateContractChainId: (id: UUID, chainId: number) => void
   updateContractAddress: (id: UUID, address: string) => void
+  updateContractABI: (id: UUID, abi: string) => void
   removeItem: (id: UUID) => void
 }>()(
   persist(
@@ -133,12 +136,36 @@ export const useEVMCollectionStore = create<{
             collections: state.collections,
           }
         }),
+      updateContractChainId: (id: UUID, chainId: number) =>
+        set((state) => {
+          const item = findItemInCollections(state.collections, id)
+
+          if (item && item.type === EVMItemType.SmartContract) {
+            item.chainId = chainId
+          }
+
+          return {
+            collections: state.collections,
+          }
+        }),
       updateContractAddress: (id: UUID, address: string) =>
         set((state) => {
           const item = findItemInCollections(state.collections, id)
 
           if (item && item.type === EVMItemType.SmartContract) {
             item.contract.address = address
+          }
+
+          return {
+            collections: state.collections,
+          }
+        }),
+      updateContractABI: (id: UUID, abi: string) =>
+        set((state) => {
+          const item = findItemInCollections(state.collections, id)
+
+          if (item && item.type === EVMItemType.SmartContract) {
+            item.contract.abi = abi
           }
 
           return {

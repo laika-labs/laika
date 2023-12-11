@@ -62,7 +62,11 @@ export default function ContractRequest() {
         </Button>
       </Allotment.Pane>
       <Allotment.Pane minSize={100} maxSize={100} priority={LayoutPriority.High} className="p-4">
-        <ContractAddress id={smartContract?.id} address={smartContract?.contract.address || ''} />
+        <ContractAddress
+          id={smartContract?.id}
+          chainId={smartContract?.chainId}
+          address={smartContract?.contract.address || ''}
+        />
       </Allotment.Pane>
       <Allotment.Pane minSize={0} priority={LayoutPriority.High} className="p-4">
         <div className="flex flex-col"></div>
