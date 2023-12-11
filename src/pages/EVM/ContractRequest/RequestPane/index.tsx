@@ -3,8 +3,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ReadTab from './ReadTab'
 import WriteTab from './WriteTab'
 import StateTab from './StateTab'
+import { useEVMCollectionStore, EVMContract } from '@/store/collections'
+import { useEVMTabStore } from '@/store/tabs'
+import { findItemInCollections } from '@/utils/collections'
+import { UUID } from 'crypto'
+import { useMemo } from 'react'
 
 export default function RequestPane() {
+  const { collections } = useEVMCollectionStore()
+  const { activeTabId } = useEVMTabStore()
+
+  const smartContract = useMemo(() => {
+    return findItemInCollections(collections, activeTabId as UUID) as EVMContract
+  }, [activeTabId, collections])
+
   return (
     <>
       <Tabs defaultValue="state" className="w-full">
@@ -15,7 +27,7 @@ export default function RequestPane() {
           <TabsTrigger value="abi">ABI</TabsTrigger>
         </TabsList>
         <TabsContent value="state">
-          <StateTab />
+          <StateTab smartContract={smartContract} />
         </TabsContent>
         <TabsContent value="read">
           <ReadTab />

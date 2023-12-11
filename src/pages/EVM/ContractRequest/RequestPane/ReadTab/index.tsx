@@ -3,13 +3,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-import { useAccount } from 'wagmi'
-
 export default function ReadTab() {
-  const { address, isConnected } = useAccount()
-
-  console.log({ address, isConnected })
-
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col w-full gap-6">
