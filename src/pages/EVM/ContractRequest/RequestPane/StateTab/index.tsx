@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Toaster } from '@/components/ui/toaster'
 import { useToast } from '@/components/ui/use-toast'
 
-import { EVMContract } from '@/store/collections'
+import { EVMABIMethod, EVMContract } from '@/store/collections'
 
 import { mainnet } from 'wagmi/chains'
 
@@ -20,18 +20,16 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
     if (!methods) {
       return []
     }
-    const filteredFields = methods.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (method: any) =>
+    const filteredMethods = methods.filter(
+      (method: EVMABIMethod) =>
         method.inputs.length === 0 && (method.stateMutability === 'view' || method.stateMutability === 'pure'),
     )
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const prefetchableMethods = filteredFields.map((field: any) => {
+    const prefetchableMethods = filteredMethods.map((method: EVMABIMethod) => {
       const address = smartContract.contract.address
       return {
         address,
-        abi: filteredFields,
-        functionName: field.name,
+        abi: filteredMethods,
+        functionName: method.name,
         chainId: smartContract.chainId ? smartContract.chainId : mainnet.id,
       }
     })
@@ -67,7 +65,7 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
                 data.map((row, idx) => {
                   const fields = getPrefetchableMethods()
                   return (
-                    <TableRow>
+                    <TableRow key={`${fields[idx].functionName}`}>
                       <TableCell>{`${fields[idx].functionName}`}</TableCell>
                       <TableCell>{`${row.result}`}</TableCell>
                     </TableRow>

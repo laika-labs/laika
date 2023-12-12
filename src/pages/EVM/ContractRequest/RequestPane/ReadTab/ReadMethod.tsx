@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
 import { mainnet, useContractRead } from 'wagmi'
+import { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ReadMethod({
   chainId,
   functionName,
@@ -16,7 +16,7 @@ export default function ReadMethod({
 }: {
   chainId?: number
   functionName: string
-  abi: any
+  abi: EVMABIMethod
   contractAddress: string
 }) {
   const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
@@ -45,15 +45,14 @@ export default function ReadMethod({
           <div className="grid w-full items-center gap-4">
             {abi &&
               abi.inputs &&
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              abi.inputs.map((field: any, idx: number) => {
+              abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
                 const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   const newArgs = [...args]
                   newArgs[idx] = event.target.value
                   setArgs(newArgs)
                 }
                 return (
-                  <div className="flex flex-col space-y-1.5">
+                  <div key={`${field.type}-${field.name}-${idx}`} className="flex flex-col space-y-1.5">
                     <Label htmlFor={`readInput-${idx}`}>{`${field.type} ${field.name}`}</Label>
                     <Input
                       id={`readInput-${idx}`}

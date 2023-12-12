@@ -1,4 +1,4 @@
-import { EVMContract } from '@/store/collections'
+import { EVMABIMethod, EVMContract } from '@/store/collections'
 
 import WriteMethod from './WriteMethod'
 
@@ -10,17 +10,15 @@ export default function WriteTab({ smartContract }: { smartContract: EVMContract
       return []
     }
     const filteredMethods = methods.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (method: any) =>
+      (method: EVMABIMethod) =>
         method.stateMutability !== 'view' && method.stateMutability !== 'pure' && method.type === 'function',
     )
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const writeableMethods = filteredMethods.map((field: any) => {
+    const writeableMethods = filteredMethods.map((method: EVMABIMethod) => {
       const address = smartContract.contract.address
       return {
         address,
         abi: filteredMethods,
-        functionName: field.name,
+        functionName: method.name,
       }
     })
 
@@ -30,18 +28,17 @@ export default function WriteTab({ smartContract }: { smartContract: EVMContract
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col w-full gap-6">
-        {getWriteableMethods().map(
-          (field: { functionName: string; abi: { [x: string]: unknown } }, idx: string | number) => {
-            return (
-              <WriteMethod
-                chainId={smartContract.chainId}
-                contractAddress={smartContract.contract.address || ''}
-                functionName={field.functionName}
-                abi={field.abi[idx]}
-              />
-            )
-          },
-        )}
+        {getWriteableMethods().map((method: { functionName: string; abi: EVMABIMethod[] }, idx: number) => {
+          return (
+            <WriteMethod
+              key={method.functionName}
+              chainId={smartContract.chainId}
+              contractAddress={smartContract.contract.address || ''}
+              functionName={method.functionName}
+              abi={method.abi[idx]}
+            />
+          )
+        })}
       </div>
     </div>
   )
