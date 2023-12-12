@@ -12,29 +12,31 @@ import { EVMContract } from '@/store/collections'
 export default function StateTab({ smartContract }: { smartContract: EVMContract }) {
   const { toast } = useToast()
 
-  const prefetchFields = () => {
-    const fields =
+  const getPrefetchableMethods = () => {
+    const methods =
       smartContract && smartContract.contract && smartContract.contract.abi && JSON.parse(smartContract.contract.abi)
-    if (!fields) {
+    if (!methods) {
       return []
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const infoFields = fields.filter((field: any) => field.inputs.length === 0 && field.stateMutability === 'view')
+    const filteredFields = methods.filter(
+      (method: any) => method.inputs.length === 0 && method.stateMutability === 'view',
+    )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const readsFields = infoFields.map((field: any) => {
+    const prefetchableMethods = filteredFields.map((field: any) => {
       const address = smartContract.contract.address
       return {
         address,
-        abi: fields,
+        abi: filteredFields,
         functionName: field.name,
       }
     })
 
-    return readsFields
+    return prefetchableMethods
   }
 
   const { data, isError, isLoading } = useContractReads({
-    contracts: prefetchFields(),
+    contracts: getPrefetchableMethods(),
   })
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
               {data &&
                 !isLoading &&
                 data.map((row, idx) => {
-                  const fields = prefetchFields()
+                  const fields = getPrefetchableMethods()
                   return (
                     <TableRow>
                       <TableCell>{`${fields[idx].functionName}`}</TableCell>
@@ -68,7 +70,7 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
                   )
                 })}
               {isLoading &&
-                prefetchFields().map(() => {
+                getPrefetchableMethods().map(() => {
                   return (
                     <TableRow>
                       <TableCell>

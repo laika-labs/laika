@@ -30,7 +30,7 @@ export default function RequestPane() {
           <StateTab smartContract={smartContract} />
         </TabsContent>
         <TabsContent value="read">
-          <ReadTab />
+          <ReadTab smartContract={smartContract} />
         </TabsContent>
         <TabsContent value="write">
           <WriteTab />

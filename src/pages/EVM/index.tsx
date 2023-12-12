@@ -1,9 +1,11 @@
 import { Allotment, LayoutPriority } from 'allotment'
 import { Folders } from 'lucide-react'
+import { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useEVMChainsStore } from '@/store/chains'
 import { useEVMTabStore } from '@/store/tabs'
 
 import Collections from './Collections'
@@ -11,9 +13,20 @@ import ContractRequest from './ContractRequest'
 
 export default function EVM() {
   const { tabs } = useEVMTabStore()
+  const { setChains } = useEVMChainsStore()
+
+  useEffect(() => {
+    const fetchChains = async () => {
+      const res = await fetch('https://chainid.network/chains.json')
+      const chains = await res.json()
+      setChains(chains)
+    }
+    fetchChains()
+  }, [setChains])
+
   return (
     <Allotment proportionalLayout={false}>
-      <Allotment.Pane minSize={256} maxSize={376} preferredSize={320} priority={LayoutPriority.Low} snap>
+      <Allotment.Pane minSize={256} maxSize={376} preferredSize={320} priority={LayoutPriority.High} snap>
         <Tabs defaultValue="collections" orientation="vertical" className="w-full h-full">
           <Allotment>
             <Allotment.Pane minSize={48} maxSize={48}>
@@ -46,7 +59,7 @@ export default function EVM() {
           </Allotment>
         </Tabs>
       </Allotment.Pane>
-      <Allotment.Pane priority={LayoutPriority.High}>{tabs.length > 0 && <ContractRequest />}</Allotment.Pane>
+      <Allotment.Pane priority={LayoutPriority.Low}>{tabs.length > 0 && <ContractRequest />}</Allotment.Pane>
     </Allotment>
   )
 }
