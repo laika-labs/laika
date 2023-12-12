@@ -27,9 +27,18 @@ export default function ReadTab({ smartContract }: { smartContract: EVMContract 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col w-full gap-6">
-        {getReadableFields().map((field, idx) => {
-          return <ReadMethod functionName={field.functionName} abi={field.abi[idx]} />
-        })}
+        {getReadableFields().map(
+          (field: { functionName: string; abi: { [x: string]: unknown } }, idx: string | number) => {
+            return (
+              <ReadMethod
+                chainId={smartContract.chainId}
+                contractAddress={smartContract.contract.address || ''}
+                functionName={field.functionName}
+                abi={field.abi[idx]}
+              />
+            )
+          },
+        )}
       </div>
     </div>
   )

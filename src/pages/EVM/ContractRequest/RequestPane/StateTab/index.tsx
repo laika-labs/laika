@@ -9,6 +9,8 @@ import { useToast } from '@/components/ui/use-toast'
 
 import { EVMContract } from '@/store/collections'
 
+import { mainnet } from 'wagmi/chains'
+
 export default function StateTab({ smartContract }: { smartContract: EVMContract }) {
   const { toast } = useToast()
 
@@ -18,8 +20,8 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
     if (!methods) {
       return []
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filteredFields = methods.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (method: any) => method.inputs.length === 0 && method.stateMutability === 'view',
     )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +31,7 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
         address,
         abi: filteredFields,
         functionName: field.name,
+        chainId: smartContract.chainId ? smartContract.chainId : mainnet.id,
       }
     })
 

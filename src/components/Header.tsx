@@ -1,6 +1,5 @@
 import laikaLogo from '/laika-labs.svg'
 import { Link } from 'react-router-dom'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 import { ThemeDropdown } from './ThemeDropdown'
 
@@ -13,8 +12,6 @@ export default function Header() {
       </Link>
       <div className="flex items-center justify-between">
         <ThemeDropdown />
-        <div className="mx-1"></div>
-        <ConnectButton />
       </div>
     </div>
   )
