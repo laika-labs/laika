@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 
 import { mainnet, useContractRead } from 'wagmi'
 import { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
+import { useResponseStore } from '@/store/responses'
 
 export default function ReadMethod({
   chainId,
@@ -20,8 +21,9 @@ export default function ReadMethod({
   contractAddress: string
 }) {
   const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
+  const { pushResponse } = useResponseStore()
 
-  const { data, refetch } = useContractRead({
+  const { data, error, refetch } = useContractRead({
     address: contractAddress as `0x${string}`,
     abi: [abi],
     functionName: functionName,
@@ -32,7 +34,22 @@ export default function ReadMethod({
 
   const handleReadClick = () => {
     refetch()
-    alert(data)
+    if (data) {
+      return pushResponse({
+        type: 'READ',
+        chainId: chainId ? chainId : mainnet.id,
+        address: contractAddress as `0x${string}`,
+        result: JSON.stringify(data.toString()),
+      })
+    }
+    if (error) {
+      return pushResponse({
+        type: 'READ',
+        chainId: chainId ? chainId : mainnet.id,
+        address: contractAddress as `0x${string}`,
+        error,
+      })
+    }
   }
 
   return (

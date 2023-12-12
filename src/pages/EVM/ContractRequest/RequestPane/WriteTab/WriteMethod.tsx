@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { mainnet, useContractWrite } from 'wagmi'
 import { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
 
+import { useResponseStore } from '@/store/responses'
+
 export default function WriteMethod({
   chainId,
   functionName,
@@ -20,13 +22,32 @@ export default function WriteMethod({
   contractAddress: string
 }) {
   const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
+  const { pushResponse } = useResponseStore()
 
-  const { data, write } = useContractWrite({
+  const { write } = useContractWrite({
     address: contractAddress as `0x${string}`,
     abi: [abi],
     functionName: functionName,
     args,
     chainId: chainId ? chainId : mainnet.id,
+    onSettled(data, error) {
+      if (data) {
+        return pushResponse({
+          type: 'WRITE',
+          chainId: chainId ? chainId : mainnet.id,
+          address: contractAddress as `0x${string}`,
+          txHash: data.hash,
+        })
+      }
+      if (error) {
+        return pushResponse({
+          type: 'WRITE',
+          chainId: chainId ? chainId : mainnet.id,
+          address: contractAddress as `0x${string}`,
+          error,
+        })
+      }
+    },
   })
 
   const handleWriteClick = () => {
@@ -63,7 +84,6 @@ export default function WriteMethod({
               })}
           </div>
         </form>
-        {`${data}`}
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button onClick={handleWriteClick}>✍️ Write</Button>
