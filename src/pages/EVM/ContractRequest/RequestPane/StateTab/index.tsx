@@ -22,7 +22,8 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
     }
     const filteredFields = methods.filter(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (method: any) => method.inputs.length === 0 && method.stateMutability === 'view',
+      (method: any) =>
+        method.inputs.length === 0 && (method.stateMutability === 'view' || method.stateMutability === 'pure'),
     )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prefetchableMethods = filteredFields.map((field: any) => {

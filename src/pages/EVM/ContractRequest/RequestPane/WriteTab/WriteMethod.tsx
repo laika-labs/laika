@@ -5,10 +5,9 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-import { mainnet, useContractRead } from 'wagmi'
+import { mainnet, useContractWrite } from 'wagmi'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function ReadMethod({
+export default function WriteMethod({
   chainId,
   functionName,
   abi,
@@ -16,23 +15,22 @@ export default function ReadMethod({
 }: {
   chainId?: number
   functionName: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abi: any
   contractAddress: string
 }) {
   const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
 
-  const { data, refetch } = useContractRead({
+  const { data, write } = useContractWrite({
     address: contractAddress as `0x${string}`,
     abi: [abi],
     functionName: functionName,
-    enabled: false,
     args,
     chainId: chainId ? chainId : mainnet.id,
   })
 
-  const handleReadClick = () => {
-    refetch()
-    alert(data)
+  const handleWriteClick = () => {
+    write()
   }
 
   return (
@@ -66,9 +64,10 @@ export default function ReadMethod({
               })}
           </div>
         </form>
+        {`${data}`}
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={handleReadClick}>🔍 Read</Button>
+        <Button onClick={handleWriteClick}>✍️ Write</Button>
       </CardFooter>
     </Card>
   )

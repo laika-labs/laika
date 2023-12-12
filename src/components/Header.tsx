@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 import { ThemeDropdown } from './ThemeDropdown'
 
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+
 export default function Header() {
   return (
     <div className="flex items-center justify-between px-3 grow">
@@ -13,6 +15,7 @@ export default function Header() {
       <div className="flex items-center justify-between">
         <ThemeDropdown />
       </div>
+      <ConnectButton />
     </div>
   )
 }

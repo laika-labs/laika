@@ -1,34 +1,47 @@
-import { CardTitle, CardHeader, CardContent, CardFooter, Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { EVMContract } from '@/store/collections'
 
-export default function WriteTab() {
+import WriteMethod from './WriteMethod'
+
+export default function WriteTab({ smartContract }: { smartContract: EVMContract }) {
+  const getWriteableMethods = () => {
+    const methods =
+      smartContract && smartContract.contract && smartContract.contract.abi && JSON.parse(smartContract.contract.abi)
+    if (!methods) {
+      return []
+    }
+    const filteredMethods = methods.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (method: any) =>
+        method.stateMutability !== 'view' && method.stateMutability !== 'pure' && method.type === 'function',
+    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const writeableMethods = filteredMethods.map((field: any) => {
+      const address = smartContract.contract.address
+      return {
+        address,
+        abi: filteredMethods,
+        functionName: field.name,
+      }
+    })
+
+    return writeableMethods
+  }
+
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col w-full gap-6">
-        <Card className="w-full rounded-none">
-          <CardHeader>
-            <CardTitle>burn</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="burn_address_usr">address usr</Label>
-                  <Input id="burn_address_usr" placeholder="address" />
-                </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="burn_uint256_wad">uint256 wad</Label>
-                  <Input id="burn_uint256_wad" placeholder="uint256" />
-                </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button>📝 Send</Button>
-          </CardFooter>
-        </Card>
+        {getWriteableMethods().map(
+          (field: { functionName: string; abi: { [x: string]: unknown } }, idx: string | number) => {
+            return (
+              <WriteMethod
+                chainId={smartContract.chainId}
+                contractAddress={smartContract.contract.address || ''}
+                functionName={field.functionName}
+                abi={field.abi[idx]}
+              />
+            )
+          },
+        )}
       </div>
     </div>
   )
