@@ -10,6 +10,7 @@ import { useEVMTabStore } from '@/store/tabs'
 import { findItemInCollections } from '@/utils/collections'
 
 import ContractAddress from './ContractAddress'
+import RequestPane from './RequestPane'
 
 export default function ContractRequest() {
   const { collections } = useEVMCollectionStore()
@@ -69,7 +70,9 @@ export default function ContractRequest() {
         />
       </Allotment.Pane>
       <Allotment.Pane minSize={0} priority={LayoutPriority.High} className="p-4">
-        <div className="flex flex-col"></div>
+        <div className="flex flex-col h-full overflow-y-auto">
+          <RequestPane />
+        </div>
       </Allotment.Pane>
       <Allotment.Pane minSize={256} preferredSize={256} priority={LayoutPriority.Low} snap>
         {' '}

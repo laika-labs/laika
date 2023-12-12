@@ -10,7 +10,9 @@ export default function Header() {
         <img src={laikaLogo} className="w-8 h-8" alt="Laika Labs logo" />
         <span className="font-bold">Laika</span>
       </Link>
-      <ThemeDropdown />
+      <div className="flex items-center justify-between">
+        <ThemeDropdown />
+      </div>
     </div>
   )
 }
