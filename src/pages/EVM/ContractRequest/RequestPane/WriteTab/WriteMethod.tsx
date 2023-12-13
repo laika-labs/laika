@@ -1,4 +1,4 @@
-import { CardTitle, CardHeader, CardContent, CardFooter, Card } from '@/components/ui/card'
+import { CardTitle, CardHeader, CardContent, Card, CardFooter } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
 
@@ -57,12 +57,12 @@ export default function WriteMethod({
 
   return (
     <Card className="w-full rounded-none">
-      <CardHeader>
+      <CardHeader className="px-4 pt-4 pb-0">
         <CardTitle>{functionName}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4">
         <form>
-          <div className="grid w-full items-center gap-4">
+          <div className="grid items-center w-full gap-4">
             {abi &&
               abi.inputs &&
               abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
@@ -86,8 +86,10 @@ export default function WriteMethod({
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button onClick={handleWriteClick}>✍️ Write</Button>
+      <CardFooter className="px-4 pb-4">
+        <Button size="sm" onClick={handleWriteClick}>
+          Write
+        </Button>
       </CardFooter>
     </Card>
   )

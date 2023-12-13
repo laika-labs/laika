@@ -53,10 +53,10 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
   return (
     <div className="flex flex-col w-full gap-6">
       <Card className="w-full rounded-none">
-        <CardHeader>
+        <CardHeader className="px-4 pt-4 pb-0">
           <CardTitle>INFO</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <Table>
             <TableCaption>Result has been pre-fetched.</TableCaption>
             <TableBody>
