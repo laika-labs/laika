@@ -33,7 +33,7 @@ export default function RequestPane() {
           <ReadTab smartContract={smartContract} />
         </TabsContent>
         <TabsContent value="write">
-          <WriteTab />
+          <WriteTab smartContract={smartContract} />
         </TabsContent>
         <TabsContent value="abi">ABI</TabsContent>
       </Tabs>

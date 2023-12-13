@@ -11,6 +11,7 @@ import { findItemInCollections } from '@/utils/collections'
 
 import ContractAddress from './ContractAddress'
 import RequestPane from './RequestPane'
+import ResponsePane from './ResponsePane'
 
 export default function ContractRequest() {
   const { collections } = useEVMCollectionStore()
@@ -75,7 +76,7 @@ export default function ContractRequest() {
         </div>
       </Allotment.Pane>
       <Allotment.Pane minSize={256} preferredSize={256} priority={LayoutPriority.Low} snap>
-        {' '}
+        <ResponsePane />
       </Allotment.Pane>
     </Allotment>
   )

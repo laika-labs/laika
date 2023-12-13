@@ -37,6 +37,21 @@ export interface EVMCollection {
   items: (EVMContract | EVMFolder)[]
 }
 
+export interface EVMABIMethod {
+  type: string
+  name: string
+  inputs: EVMABIMethodInputsOutputs[]
+  outputs: EVMABIMethodInputsOutputs[]
+  stateMutability?: string
+  anonymous?: boolean
+}
+
+export interface EVMABIMethodInputsOutputs {
+  name: string
+  type: string
+  components?: EVMABIMethodInputsOutputs[]
+}
+
 const collections: EVMCollection[] = []
 
 export const useEVMCollectionStore = create<{
