@@ -20,7 +20,7 @@ export default function RequestPane() {
   }, [activeTabId, collections])
 
   return (
-    <Tabs defaultValue="state" className="w-full h-full">
+    <Tabs defaultValue="state" className="w-full">
       <TabsList className="flex h-auto gap-4 p-0 w-fit bg-background">
         <TabsTrigger value="state" asChild>
           <TabsButton>State</TabsButton>
@@ -42,7 +42,7 @@ export default function RequestPane() {
         <ReadTab smartContract={smartContract} />
       </TabsContent>
       <TabsContent value="write">
-        <WriteTab />
+        <WriteTab smartContract={smartContract} />
       </TabsContent>
       <TabsContent value="abi">ABI</TabsContent>
     </Tabs>
