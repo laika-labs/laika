@@ -14,8 +14,9 @@ export default function Header() {
       </Link>
       <div className="flex items-center justify-between">
         <ThemeDropdown />
+        <div className="mx-2" />
+        <ConnectButton />
       </div>
-      <ConnectButton />
     </div>
   )
 }

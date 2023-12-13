@@ -26,7 +26,7 @@ export default function ReadMethod({
   const { data, error, refetch } = useContractRead({
     address: contractAddress as `0x${string}`,
     abi: [abi],
-    functionName: functionName,
+    functionName,
     enabled: false,
     args,
     chainId: chainId ? chainId : mainnet.id,
@@ -34,22 +34,23 @@ export default function ReadMethod({
 
   const handleReadClick = () => {
     refetch()
-    if (data) {
-      return pushResponse({
-        type: 'READ',
-        chainId: chainId ? chainId : mainnet.id,
-        address: contractAddress as `0x${string}`,
-        result: JSON.stringify(data.toString()),
-      })
-    }
     if (error) {
       return pushResponse({
         type: 'READ',
+        functionName,
         chainId: chainId ? chainId : mainnet.id,
         address: contractAddress as `0x${string}`,
         error,
       })
     }
+
+    return pushResponse({
+      type: 'READ',
+      functionName,
+      chainId: chainId ? chainId : mainnet.id,
+      address: contractAddress as `0x${string}`,
+      result: JSON.stringify(data?.toString()),
+    })
   }
 
   return (

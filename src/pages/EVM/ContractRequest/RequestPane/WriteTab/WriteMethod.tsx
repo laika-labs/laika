@@ -31,22 +31,23 @@ export default function WriteMethod({
     args,
     chainId: chainId ? chainId : mainnet.id,
     onSettled(data, error) {
-      if (data) {
-        return pushResponse({
-          type: 'WRITE',
-          chainId: chainId ? chainId : mainnet.id,
-          address: contractAddress as `0x${string}`,
-          txHash: data.hash,
-        })
-      }
       if (error) {
         return pushResponse({
           type: 'WRITE',
+          functionName,
           chainId: chainId ? chainId : mainnet.id,
           address: contractAddress as `0x${string}`,
           error,
         })
       }
+
+      return pushResponse({
+        type: 'WRITE',
+        functionName,
+        chainId: chainId ? chainId : mainnet.id,
+        address: contractAddress as `0x${string}`,
+        txHash: data && data.hash,
+      })
     },
   })
 
