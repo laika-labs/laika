@@ -9,7 +9,7 @@ export default forwardRef<HTMLButtonElement, PropsWithChildren<ButtonHTMLAttribu
         className={cn(
           className,
           'relative px-0 pt-0',
-          'data-[state=active]:shadow-none',
+          'data-[state=active]:shadow-none data-[state=active]:bg-transparent',
           'data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:h-0.5 data-[state=active]:after:inset-x-0 data-[state=active]:after:bg-primary',
         )}
         {...props}

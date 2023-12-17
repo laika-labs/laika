@@ -114,7 +114,7 @@ export default function ABITab({ smartContract }: { smartContract: EVMContract }
           </Dialog>
         </CardHeader>
         <CardContent className="p-4">
-          <TabsList className="flex h-auto gap-4 p-0 w-fit bg-background">
+          <TabsList className="flex h-auto gap-4 p-0 bg-transparent w-fit">
             <TabsTrigger value="object" asChild>
               <TabsButton>Object</TabsButton>
             </TabsTrigger>
