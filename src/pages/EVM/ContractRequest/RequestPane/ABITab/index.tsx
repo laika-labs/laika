@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Inspector } from 'react-inspector'
 import * as z from 'zod'
 
+import { useTheme } from '@/components/ThemeProvider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -32,6 +33,8 @@ export default function ABITab({ smartContract }: { smartContract: EVMContract }
   const abi = smartContract.contract?.abi && JSON.parse(smartContract.contract.abi)
 
   const [open, setOpen] = useState(false)
+
+  const { resolvedTheme } = useTheme()
 
   const { updateContractABI } = useEVMCollectionStore()
 
@@ -120,13 +123,19 @@ export default function ABITab({ smartContract }: { smartContract: EVMContract }
             </TabsTrigger>
           </TabsList>
           <TabsContent value="object">
-            <Inspector table={false} data={abi} expandLevel={2} />
+            <Inspector
+              table={false}
+              data={abi}
+              expandLevel={2}
+              theme={resolvedTheme === 'light' ? 'chromeLight' : 'chromeDark'}
+            />
           </TabsContent>
           <TabsContent value="table">
             <Inspector
               table={true}
               data={abi}
               columns={['name', 'stateMutability', 'type', 'payable', 'inputs', 'outputs']}
+              theme={resolvedTheme === 'light' ? 'chromeLight' : 'chromeDark'}
             />
           </TabsContent>
         </CardContent>
