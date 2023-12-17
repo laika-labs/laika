@@ -20,7 +20,7 @@ export default function RequestPane() {
   }, [activeTabId, collections])
 
   return (
-    <Tabs defaultValue="state" className="w-full">
+    <Tabs defaultValue="state" className="flex flex-col h-full">
       <TabsList className="flex h-auto gap-4 p-0 w-fit bg-background">
         <TabsTrigger value="state" asChild>
           <TabsButton>State</TabsButton>

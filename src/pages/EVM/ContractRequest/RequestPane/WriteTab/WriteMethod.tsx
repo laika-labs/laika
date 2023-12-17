@@ -1,14 +1,16 @@
-import { CardTitle, CardHeader, CardContent, Card, CardFooter } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
+import { Send } from 'lucide-react'
 import { useState } from 'react'
+import { Address } from 'viem'
+import { mainnet, useContractWrite, useSwitchNetwork } from 'wagmi'
 
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-
-import { mainnet, useContractWrite } from 'wagmi'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
-
 import { useResponseStore } from '@/store/responses'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export default function WriteMethod({
   chainId,
@@ -19,13 +21,16 @@ export default function WriteMethod({
   chainId?: number
   functionName: string
   abi: EVMABIMethod
-  contractAddress: string
+  contractAddress: Address
 }) {
   const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
+
   const { pushResponse } = useResponseStore()
 
-  const { write } = useContractWrite({
-    address: contractAddress as `0x${string}`,
+  const { switchNetwork } = useSwitchNetwork()
+
+  const { write, isLoading } = useContractWrite({
+    address: contractAddress,
     abi: [abi],
     functionName: functionName,
     args,
@@ -36,7 +41,7 @@ export default function WriteMethod({
           type: 'WRITE',
           functionName,
           chainId: chainId ? chainId : mainnet.id,
-          address: contractAddress as `0x${string}`,
+          address: contractAddress,
           error,
         })
       }
@@ -45,7 +50,7 @@ export default function WriteMethod({
         type: 'WRITE',
         functionName,
         chainId: chainId ? chainId : mainnet.id,
-        address: contractAddress as `0x${string}`,
+        address: contractAddress,
         txHash: data && data.hash,
       })
     },
@@ -53,6 +58,10 @@ export default function WriteMethod({
 
   const handleWriteClick = () => {
     write()
+  }
+
+  const handleSwitchNetwork = () => {
+    switchNetwork?.(chainId)
   }
 
   return (
@@ -87,9 +96,54 @@ export default function WriteMethod({
         </form>
       </CardContent>
       <CardFooter className="px-4 pb-4">
-        <Button size="sm" onClick={handleWriteClick}>
-          Write
-        </Button>
+        <ConnectButton.Custom>
+          {({ account, chain, openConnectModal, mounted }) => {
+            const ready = mounted
+            const connected = ready && account && chain
+
+            return (
+              <div
+                {...(!ready && {
+                  'aria-hidden': true,
+                  style: {
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                  },
+                })}
+              >
+                {(() => {
+                  if (!connected) {
+                    return (
+                      <Button size="sm" onClick={openConnectModal}>
+                        Connect Wallet
+                      </Button>
+                    )
+                  }
+
+                  if (chain.unsupported) {
+                    return (
+                      <Button size="sm" onClick={handleSwitchNetwork}>
+                        Switch Network
+                      </Button>
+                    )
+                  }
+
+                  return (
+                    <Button size="sm" onClick={handleWriteClick}>
+                      {isLoading ? (
+                        <ReloadIcon className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4 mr-2" />
+                      )}
+                      Write
+                    </Button>
+                  )
+                })()}
+              </div>
+            )
+          }}
+        </ConnectButton.Custom>
       </CardFooter>
     </Card>
   )
