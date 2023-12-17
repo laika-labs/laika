@@ -6,6 +6,7 @@ import { EVMContract, useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 import { findItemInCollections } from '@/utils/collections'
 
+import ABITab from './ABITab'
 import ReadTab from './ReadTab'
 import StateTab from './StateTab'
 import TabsButton from './TabsButton'
@@ -44,7 +45,9 @@ export default function RequestPane() {
       <TabsContent value="write">
         <WriteTab smartContract={smartContract} />
       </TabsContent>
-      <TabsContent value="abi">ABI</TabsContent>
+      <TabsContent className="flex-auto" value="abi">
+        <ABITab smartContract={smartContract} />
+      </TabsContent>
     </Tabs>
   )
 }
