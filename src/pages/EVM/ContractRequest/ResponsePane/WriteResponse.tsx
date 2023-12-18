@@ -1,18 +1,30 @@
+import { useWaitForTransaction } from 'wagmi'
+import { Inspector } from 'react-inspector'
+
+import { useTheme } from '@/components/ThemeProvider'
+
 import { Response } from '@/store/responses'
-import { useTransaction, serialize } from 'wagmi'
+import { Loader } from 'lucide-react'
 
 export default function ReadResponse({ response }: { response: Response }) {
-  const { data } = useTransaction({ hash: response.txHash })
+  const { data, isLoading } = useWaitForTransaction({ hash: response.txHash })
+  const { resolvedTheme } = useTheme()
 
   return (
     <div className="hover:bg-muted/60 p-2 rounded">
-      <p className="text-primary">
+      <span className="text-primary flex items-center">
+        {isLoading && <Loader className="h-4 w-4 animate-spin" />}
         TRANSACTED TO {response.functionName} at [ChainID={response.chainId} {response.address}]
-      </p>
-      <details className="whitespace-pre">
-        <summary className="underline">tx: {response.txHash}</summary>
-        {data && JSON.stringify(JSON.parse(serialize(data)), null, 2)}
-      </details>
+      </span>
+      <p className="underline">tx: {response.txHash}</p>
+      {!isLoading && data && (
+        <Inspector
+          table={false}
+          data={data}
+          expandLevel={1}
+          theme={resolvedTheme === 'light' ? 'chromeLight' : 'chromeDark'}
+        />
+      )}
     </div>
   )
 }

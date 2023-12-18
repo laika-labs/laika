@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
+import { EVMProvider } from '@/components/EVMProvider'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -17,8 +18,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="theme">
-      <RouterProvider router={router} />
-      <Toaster />
+      <EVMProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </EVMProvider>
     </ThemeProvider>
   )
 }

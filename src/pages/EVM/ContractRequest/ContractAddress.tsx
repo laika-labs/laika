@@ -1,7 +1,7 @@
 import { UUID } from 'crypto'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { isAddress } from 'viem'
+import { Address, isAddress } from 'viem'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -84,7 +84,7 @@ export default function ContractAddress({ id, chainId, address }: ContractAddres
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      address: address as `0x${string}`,
+      address: address as Address,
     },
   })
 
@@ -96,12 +96,16 @@ export default function ContractAddress({ id, chainId, address }: ContractAddres
   )
 
   useEffect(() => {
+    form.reset({
+      address: address as Address,
+    })
+
     const subscription = form.watch(() => {
       form.handleSubmit(onSubmit)()
     })
 
     return () => subscription.unsubscribe()
-  }, [form, onSubmit])
+  }, [address, form, onSubmit])
 
   return (
     <Form {...form}>

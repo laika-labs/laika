@@ -12,4 +12,7 @@ export const getabi: Record<string, string> = {
     'https://api-optimistic.etherscan.io/api?module=contract&action=getabi&address=${address}',
   'https://arbiscan.io': 'https://api.arbiscan.io/api?module=contract&action=getabi&address=${address}',
   'https://goerli.arbiscan.io': 'https://api-goerli.arbiscan.io/api?module=contract&action=getabi&address=${address}',
+  'https://scrollscan.com': 'https://api.scrollscan.com/api?module=contract&action=getabi&address=${address}',
+  'https://sepolia.scrollscan.com':
+    'https://api-sepolia.scrollscan.com/api?module=contract&action=getabi&address=${address}',
 }

@@ -1,44 +1,39 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
+import { Abi, Address } from 'viem'
 import { useContractReads } from 'wagmi'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Toaster } from '@/components/ui/toaster'
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/use-toast'
-
 import { EVMABIMethod, EVMContract } from '@/store/collections'
-
-import { mainnet } from 'wagmi/chains'
 
 export default function StateTab({ smartContract }: { smartContract: EVMContract }) {
   const { toast } = useToast()
 
-  const getPrefetchableMethods = () => {
-    const methods =
-      smartContract && smartContract.contract && smartContract.contract.abi && JSON.parse(smartContract.contract.abi)
-    if (!methods) {
+  const prefetchableMethods = useMemo(() => {
+    const address = smartContract.contract?.address as Address
+    const methods: EVMABIMethod[] = smartContract.contract?.abi && JSON.parse(smartContract.contract.abi)
+    if (!address || !methods) {
       return []
     }
     const filteredMethods = methods.filter(
-      (method: EVMABIMethod) =>
-        method.inputs.length === 0 && (method.stateMutability === 'view' || method.stateMutability === 'pure'),
+      (method) =>
+        method.inputs?.length === 0 && (method.stateMutability === 'view' || method.stateMutability === 'pure'),
     )
-    const prefetchableMethods = filteredMethods.map((method: EVMABIMethod) => {
-      const address = smartContract.contract.address
+
+    return filteredMethods.map((method) => {
       return {
         address,
-        abi: filteredMethods,
+        abi: filteredMethods as Abi,
         functionName: method.name,
-        chainId: smartContract.chainId ? smartContract.chainId : mainnet.id,
+        chainId: smartContract.chainId,
       }
     })
-
-    return prefetchableMethods
-  }
+  }, [smartContract.chainId, smartContract.contract.abi, smartContract.contract?.address])
 
   const { data, isError, isLoading } = useContractReads({
-    contracts: getPrefetchableMethods(),
+    contracts: prefetchableMethods,
   })
 
   useEffect(() => {
@@ -51,44 +46,40 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
   }, [isError, toast])
 
   return (
-    <div className="flex flex-col w-full gap-6">
-      <Card className="w-full rounded-none">
-        <CardHeader>
-          <CardTitle>INFO</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableCaption>Result has been pre-fetched.</TableCaption>
-            <TableBody>
-              {data &&
-                !isLoading &&
-                data.map((row, idx) => {
-                  const fields = getPrefetchableMethods()
-                  return (
-                    <TableRow key={`${fields[idx].functionName}`}>
-                      <TableCell>{`${fields[idx].functionName}`}</TableCell>
-                      <TableCell>{`${row.result}`}</TableCell>
-                    </TableRow>
-                  )
-                })}
-              {isLoading &&
-                getPrefetchableMethods().map(() => {
-                  return (
-                    <TableRow>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[250px]" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[250px]" />
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-      <Toaster />
-    </div>
+    <Card className="w-full rounded-none">
+      <CardHeader className="px-4 pt-4 pb-0">
+        <CardTitle>INFO</CardTitle>
+      </CardHeader>
+      <CardContent className="p-4">
+        <Table>
+          <TableCaption>Result has been pre-fetched.</TableCaption>
+          <TableBody>
+            {data &&
+              !isLoading &&
+              data.map((row, idx) => {
+                return (
+                  <TableRow key={prefetchableMethods[idx].functionName}>
+                    <TableCell>{`${prefetchableMethods[idx].functionName}`}</TableCell>
+                    <TableCell>{`${row.result}`}</TableCell>
+                  </TableRow>
+                )
+              })}
+            {isLoading &&
+              prefetchableMethods.map((method) => {
+                return (
+                  <TableRow key={method.functionName}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[250px]" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[250px]" />
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   )
 }
