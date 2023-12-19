@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { useEVMCollectionStore } from '@/store/collections'
 
 import Folder from './Folder'
+import NewRequest from './NewRequest'
 
 export default function Collections() {
   const { collections, addCollection } = useEVMCollectionStore()
@@ -14,9 +15,7 @@ export default function Collections() {
       <Allotment.Pane minSize={48} maxSize={48}>
         <div className="flex items-center justify-between p-2">
           <small className="text-sm font-medium leading-none">Collections</small>
-          <Button variant="secondary" size="sm">
-            New
-          </Button>
+          <NewRequest />
         </div>
       </Allotment.Pane>
       <Allotment.Pane minSize={36} maxSize={36}>
