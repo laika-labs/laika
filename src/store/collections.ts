@@ -56,7 +56,7 @@ const collections: EVMCollection[] = []
 
 export const useEVMCollectionStore = create<{
   collections: EVMCollection[]
-  addCollection: () => void
+  addCollection: () => UUID
   removeCollection: (id: UUID) => void
   renameItem: (id: UUID, name: string) => void
   toggleOpen: (id: UUID) => void
@@ -70,10 +70,11 @@ export const useEVMCollectionStore = create<{
   persist(
     (set) => ({
       collections: [...collections],
-      addCollection: () =>
+      addCollection: () => {
+        const id = crypto.randomUUID()
         set((state) => {
           const collection: EVMCollection = {
-            id: crypto.randomUUID(),
+            id,
             name: 'New Collection',
             type: EVMItemType.Collection,
             isOpen: true,
@@ -81,7 +82,9 @@ export const useEVMCollectionStore = create<{
           }
 
           return { collections: [...state.collections, collection] }
-        }),
+        })
+        return id
+      },
       removeCollection: (id: UUID) =>
         set((state) => ({
           collections: state.collections.filter((c) => c.id !== id),
