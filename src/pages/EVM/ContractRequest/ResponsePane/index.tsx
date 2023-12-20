@@ -17,6 +17,7 @@ export default function ResponsePane() {
         </Button>
       </div>
       <div className="h-full overflow-y-auto">
+        {responses.length === 0 && <div className="text-center text-gray-500">No responses to display.</div>}
         {responses.map((response) => {
           switch (response.type) {
             case 'READ':

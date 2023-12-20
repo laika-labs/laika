@@ -27,6 +27,12 @@ export default function WriteTab({ smartContract }: { smartContract: EVMContract
 
   return (
     <div className="flex flex-col w-full gap-2">
+      {writeableMethods.length === 0 && (
+        <div className="text-center underline my-2">
+          <p>No writable methods found for this contract.</p>
+          <p>Please use another tab to interact with the contract.</p>
+        </div>
+      )}
       {writeableMethods.map((method, idx) => {
         return (
           <WriteMethod

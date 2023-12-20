@@ -27,6 +27,12 @@ export default function ReadTab({ smartContract }: { smartContract: EVMContract 
 
   return (
     <div className="flex flex-col w-full gap-2">
+      {readableMethods.length === 0 && (
+        <div className="text-center underline my-2">
+          <p>No readable methods found for this contract.</p>
+          <p>Please use another tab to interact with the contract.</p>
+        </div>
+      )}
       {readableMethods.map((method, idx) => {
         return (
           <ReadMethod

@@ -1,6 +1,6 @@
 import { Allotment, LayoutPriority } from 'allotment'
 import { Folders } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -10,6 +10,7 @@ import { useEVMTabStore } from '@/store/tabs'
 
 import Collections from './Collections'
 import ContractRequest from './ContractRequest'
+import Welcome from './Welcome'
 
 export default function EVM() {
   const { tabs } = useEVMTabStore()
@@ -23,6 +24,11 @@ export default function EVM() {
     }
     fetchChains()
   }, [setChains])
+
+  const displayContractRequest = useMemo(() => {
+    if (tabs.length > 0) return <ContractRequest />
+    return <Welcome />
+  }, [tabs])
 
   return (
     <Allotment proportionalLayout={false}>
@@ -59,7 +65,7 @@ export default function EVM() {
           </Allotment>
         </Tabs>
       </Allotment.Pane>
-      <Allotment.Pane priority={LayoutPriority.Low}>{tabs.length > 0 && <ContractRequest />}</Allotment.Pane>
+      <Allotment.Pane priority={LayoutPriority.Low}>{displayContractRequest}</Allotment.Pane>
     </Allotment>
   )
 }
