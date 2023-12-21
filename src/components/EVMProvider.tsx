@@ -8,13 +8,17 @@ import { useEVMChainsStore } from '@/store/chains'
 import { EVMContract, useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 import { findItemInCollections } from '@/utils/collections'
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { darkTheme, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc'
+
+import { useTheme } from './ThemeProvider'
 
 export function EVMProvider({ children }: PropsWithChildren) {
   const { collections } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
   const { chains: chainList } = useEVMChainsStore()
+
+  const { resolvedTheme } = useTheme()
 
   const smartContract = findItemInCollections(collections, activeTabId as UUID) as EVMContract
 
@@ -70,9 +74,19 @@ export function EVMProvider({ children }: PropsWithChildren) {
     publicClient,
   })
 
+  const resolvedRainbowKitTheme = useMemo(() => {
+    if (resolvedTheme === 'dark') {
+      return darkTheme()
+    } else {
+      return lightTheme()
+    }
+  }, [resolvedTheme])
+
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+      <RainbowKitProvider theme={resolvedRainbowKitTheme} chains={chains}>
+        {children}
+      </RainbowKitProvider>
     </WagmiConfig>
   )
 }
