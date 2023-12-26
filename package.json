@@ -48,6 +48,13 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "@serenity-js/console-reporter": "^3.14.2",
+    "@serenity-js/core": "^3.14.2",
+    "@serenity-js/playwright": "^3.14.2",
+    "@serenity-js/playwright-test": "^3.14.2",
+    "@serenity-js/serenity-bdd": "^3.14.2",
+    "@serenity-js/web": "^3.14.2",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.find": "^4.6.9",
     "@types/lodash.foreach": "^4.5.9",
