@@ -6,7 +6,7 @@ import { UserNote } from '../../fixtures/actors'
 const newRequestBtn = PageElement.located(By.css('[aria-haspopup="dialog"]')).describedAs('New request button')
 
 const triggerNewRequestDialogBtn = (text: string) =>
-  PageElements.located(By.css('.font-semibold.leading-none.tracking-tight'))
+  PageElements.located(By.css('h3.font-semibold.leading-none.tracking-tight'))
     .describedAs('new request type button')
     .where(Text, equals(text))
     .first()
@@ -24,15 +24,17 @@ const newRequestContractAddrInput = PageElement.located(
   By.css('[placeholder="Paste your smart contract address here."]').describedAs('contract address input'),
 )
 
+const newRequestAbiInput = PageElement.located(By.css('textarea[name="abi"]')).describedAs('abi text area')
+
 const submitCreateRequest = PageElements.located(By.css('[type="submit"]')).describedAs('submit button').first()
 
-export const ClickCreateNewRequestDialog = (): Task =>
+export const ClickCreateNewRequestDialog = (type: string): Task =>
   Task.where(
     '#actor create new request of a contract',
     Wait.until(newRequestBtn, isPresent()),
     Click.on(newRequestBtn),
-    Wait.until(triggerNewRequestDialogBtn('Chain Explorer'), isPresent()),
-    Click.on(triggerNewRequestDialogBtn('Chain Explorer')),
+    Wait.until(triggerNewRequestDialogBtn(type), isPresent()),
+    Click.on(triggerNewRequestDialogBtn(type)),
   )
 
 export const FillContractAddrInput = (): Task =>
@@ -40,6 +42,13 @@ export const FillContractAddrInput = (): Task =>
     '#actor type contract address input',
     Wait.until(newRequestContractAddrInput, isPresent()),
     Enter.theValue(notes<UserNote>().get('requestContract').contractAddress).into(newRequestContractAddrInput),
+  )
+
+export const FillAbi = (): Task =>
+  Task.where(
+    '#actor fill contract abi',
+    Wait.until(newRequestAbiInput, isPresent()),
+    Enter.theValue(notes<UserNote>().get('requestContract').abi).into(newRequestAbiInput),
   )
 
 export const SelectChain = (): Task =>
