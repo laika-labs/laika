@@ -9,7 +9,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json}\"",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "e2e": "bunx playwright test",
+    "e2e-report": "bunx playwright show-report"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
