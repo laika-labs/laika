@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright and serenity-js
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/target/
