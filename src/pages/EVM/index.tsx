@@ -39,17 +39,17 @@ export default function EVM() {
               <TooltipProvider>
                 <TabsList className="p-2 bg-inherit">
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <TabsTrigger
-                        value="collections"
-                        className="data-[state=active]:text-primary data-[state=active]:shadow-none"
-                        asChild
-                      >
+                    <TabsTrigger
+                      value="collections"
+                      className="data-[state=active]:text-primary data-[state=active]:shadow-none"
+                      asChild
+                    >
+                      <TooltipTrigger asChild>
                         <Button variant="ghost" className="h-auto p-2">
                           <Folders className="w-4 h-4" />
                         </Button>
-                      </TabsTrigger>
-                    </TooltipTrigger>
+                      </TooltipTrigger>
+                    </TabsTrigger>
                     <TooltipContent side="right">
                       <p>Collections</p>
                     </TooltipContent>
