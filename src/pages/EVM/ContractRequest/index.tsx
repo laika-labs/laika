@@ -1,7 +1,7 @@
-import { Allotment, LayoutPriority } from 'allotment'
+import { Allotment, AllotmentHandle, LayoutPriority } from 'allotment'
 import { UUID } from 'crypto'
 import { X } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -12,14 +12,23 @@ import { findItemInCollections } from '@/utils/collections'
 import ContractAddress from './ContractAddress'
 import RequestPane from './RequestPane'
 import ResponsePane from './ResponsePane'
+import Toolbar from './Toolbar'
 
 export default function ContractRequest() {
+  const toolbarRef = useRef<AllotmentHandle>(null)
+
   const { collections } = useEVMCollectionStore()
   const { tabs, activeTabId, setActiveTab, removeTab, clearTabs } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
     return findItemInCollections(collections, activeTabId as UUID) as EVMContract
   }, [activeTabId, collections])
+
+  const handleToolbarChange = (sizes: number[]) => {
+    if (sizes?.[1] > 48 && sizes?.[1] < 384) {
+      toolbarRef.current?.resize([sizes?.[0], 384])
+    }
+  }
 
   return (
     <Allotment vertical proportionalLayout={false}>
@@ -63,20 +72,31 @@ export default function ContractRequest() {
           <small className="py-2 text-sm font-medium leading-none truncate">Close All Tabs</small>
         </Button>
       </Allotment.Pane>
-      <Allotment.Pane minSize={100} maxSize={100} priority={LayoutPriority.High} className="p-4">
-        <ContractAddress
-          id={smartContract.id}
-          chainId={smartContract?.chainId}
-          address={smartContract.contract?.address || ''}
-        />
-      </Allotment.Pane>
-      <Allotment.Pane minSize={0} priority={LayoutPriority.High} className="p-4">
-        <div className="h-full overflow-y-auto">
-          <RequestPane />
-        </div>
-      </Allotment.Pane>
-      <Allotment.Pane minSize={256} preferredSize={256} priority={LayoutPriority.Low} snap>
-        <ResponsePane />
+      <Allotment.Pane priority={LayoutPriority.High}>
+        <Allotment ref={toolbarRef} onChange={handleToolbarChange} proportionalLayout={false}>
+          <Allotment.Pane priority={LayoutPriority.High}>
+            <Allotment vertical proportionalLayout={false}>
+              <Allotment.Pane minSize={100} maxSize={100} priority={LayoutPriority.High} className="p-4">
+                <ContractAddress
+                  id={smartContract.id}
+                  chainId={smartContract?.chainId}
+                  address={smartContract.contract?.address || ''}
+                />
+              </Allotment.Pane>
+              <Allotment.Pane minSize={0} priority={LayoutPriority.High} className="p-4">
+                <div className="h-full overflow-y-auto">
+                  <RequestPane />
+                </div>
+              </Allotment.Pane>
+              <Allotment.Pane minSize={256} preferredSize={256} priority={LayoutPriority.Low} snap>
+                <ResponsePane />
+              </Allotment.Pane>
+            </Allotment>
+          </Allotment.Pane>
+          <Allotment.Pane minSize={48} maxSize={448} preferredSize={48} priority={LayoutPriority.Low}>
+            <Toolbar toolbarRef={toolbarRef} />
+          </Allotment.Pane>
+        </Allotment>
       </Allotment.Pane>
     </Allotment>
   )
