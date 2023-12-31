@@ -12,6 +12,7 @@ import { codegens } from '@/utils/codegens/evm'
 import { findItemInCollections } from '@/utils/collections'
 import Editor from '@monaco-editor/react'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
+import { useTheme } from '@/components/ThemeProvider'
 
 interface CodeSnippetProps {
   handleClose: () => void
@@ -20,6 +21,8 @@ interface CodeSnippetProps {
 export default function CodeSnippet({ handleClose }: CodeSnippetProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(codegens[0].name)
+
+  const { resolvedTheme } = useTheme()
 
   const { collections } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
@@ -94,6 +97,7 @@ export default function CodeSnippet({ handleClose }: CodeSnippetProps) {
             wordWrap: 'on',
             fontSize: 12,
           }}
+          theme={resolvedTheme === 'light' ? 'light' : 'vs-dark'}
         />
       </div>
     </div>
