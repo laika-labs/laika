@@ -16,14 +16,20 @@ interface ToolbarProps {
 export default function Toolbar({ toolbarRef }: ToolbarProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
+  const [lastValue, setLastValue] = useState('code')
 
   const handleValueChange = (value: string) => {
     setValue(value)
+    if (value) {
+      setLastValue(value)
+    }
   }
 
   const handleToolbarOpen = () => {
-    setOpen(true)
-    toolbarRef.current?.resize([0, 448])
+    if (!open) {
+      setOpen(true)
+      toolbarRef.current?.resize([0, 448])
+    }
   }
 
   const handleToolbarClose = () => {
@@ -36,10 +42,12 @@ export default function Toolbar({ toolbarRef }: ToolbarProps) {
   }
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      setValue(lastValue)
+    } else {
       setValue('')
     }
-  }, [open])
+  }, [lastValue, open])
 
   return (
     <Tabs value={value} onValueChange={handleValueChange} orientation="vertical" className="w-full h-full">
