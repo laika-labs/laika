@@ -19,15 +19,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils'
 import { EVMContract, useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
+import { isItemMatchSearchText } from '@/utils/collections'
 
 import Rename from './Rename'
 
 interface SmartContractProps {
   smartContract: EVMContract
   level: number
+  search: string
 }
 
-export default function SmartContract({ smartContract, level }: SmartContractProps) {
+export default function SmartContract({ smartContract, level, search }: SmartContractProps) {
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -51,6 +53,10 @@ export default function SmartContract({ smartContract, level }: SmartContractPro
     removeTab(smartContract.id)
     removeItem(smartContract.id)
     handleToggleDelete()
+  }
+
+  if (search !== '' && !isItemMatchSearchText(smartContract, search)) {
+    return null
   }
 
   return (

@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { EVMCollection, EVMFolder, EVMItemType, useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
+import { isFolderHaveItemsMatchSearchText } from '@/utils/collections'
 
 import Rename from './Rename'
 import SmartContract from './SmartContract'
@@ -24,9 +25,10 @@ import SmartContract from './SmartContract'
 interface CollectionProps {
   folder: EVMCollection | EVMFolder
   level?: number
+  search: string
 }
 
-export default function Folder({ folder, level = 0 }: CollectionProps) {
+export default function Folder({ folder, level = 0, search }: CollectionProps) {
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -64,6 +66,10 @@ export default function Folder({ folder, level = 0 }: CollectionProps) {
       removeItem(folder.id)
     }
     handleToggleDelete()
+  }
+
+  if (search !== '' && !isFolderHaveItemsMatchSearchText(folder, search)) {
+    return null
   }
 
   return (
@@ -122,9 +128,9 @@ export default function Folder({ folder, level = 0 }: CollectionProps) {
             })
             .map((item) => {
               if (item.type === EVMItemType.Folder) {
-                return <Folder key={item.id} folder={item} level={level + 1} />
+                return <Folder key={item.id} folder={item} level={level + 1} search={search} />
               } else if (item.type === EVMItemType.SmartContract) {
-                return <SmartContract key={item.id} smartContract={item} level={level + 1} />
+                return <SmartContract key={item.id} smartContract={item} level={level + 1} search={search} />
               }
               return null
             })}

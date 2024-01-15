@@ -1,4 +1,5 @@
 import { Allotment } from 'allotment'
+import { ChangeEvent, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,7 +9,13 @@ import Folder from './Folder'
 import NewRequest from './NewRequest'
 
 export default function Collections() {
+  const [search, setSearch] = useState('')
+
   const { collections, addCollection } = useEVMCollectionStore()
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
 
   return (
     <Allotment className="w-full h-full" vertical>
@@ -20,13 +27,18 @@ export default function Collections() {
       </Allotment.Pane>
       <Allotment.Pane minSize={36} maxSize={36}>
         <div className="px-2">
-          <Input type="text" placeholder="Search" className="p-0 border-none focus-visible:ring-0" />
+          <Input
+            type="text"
+            placeholder="Search"
+            className="p-0 border-none focus-visible:ring-0"
+            onChange={handleSearch}
+          />
         </div>
       </Allotment.Pane>
       <Allotment.Pane className="py-1">
         {collections.length > 0 ? (
           collections.map((collection) => {
-            return <Folder key={collection.id} folder={collection} />
+            return <Folder key={collection.id} folder={collection} search={search} />
           })
         ) : (
           <div className="flex flex-col items-center px-2 py-12 space-y-4 select-none text-muted-foreground">
