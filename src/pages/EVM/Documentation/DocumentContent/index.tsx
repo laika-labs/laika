@@ -23,7 +23,10 @@ export default function DocumentContent() {
       {flattenedItems?.map((item) => {
         if (item.type === EVMItemType.Collection) {
           return (
-            <h1 key={item.id} className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
+            <h1
+              key={item.id}
+              className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl hover:underline"
+            >
               {item.name}
             </h1>
           )
@@ -31,7 +34,7 @@ export default function DocumentContent() {
           return (
             <h2
               key={item.id}
-              className="pb-2 mt-10 text-3xl font-semibold tracking-tight transition-colors border-b scroll-m-20 first:mt-0"
+              className="pb-2 mt-10 text-3xl font-semibold tracking-tight transition-colors border-b scroll-m-20 first:mt-0 hover:underline"
             >
               {item.name}
             </h2>
@@ -51,10 +54,16 @@ export default function DocumentContent() {
 
         return (
           <Fragment key={item.id}>
-            <h3 className="mt-8 text-2xl font-semibold tracking-tight scroll-m-20 first:mt-0">{item.name}</h3>
-            {eventList?.length > 0 && <ContentABI title="Events" abi={eventList} />}
-            {readFunctionList?.length > 0 && <ContentABI title="Read-Only Functions" abi={readFunctionList} />}
-            {writeFunctionList?.length > 0 && <ContentABI title="State-Changing Functions" abi={writeFunctionList} />}
+            <h3 className="mt-8 text-2xl font-semibold tracking-tight scroll-m-20 first:mt-0 hover:underline">
+              {item.name}
+            </h3>
+            {eventList?.length > 0 && <ContentABI title="Events" abi={eventList} contractId={item.id} />}
+            {readFunctionList?.length > 0 && (
+              <ContentABI title="Read-Only Functions" abi={readFunctionList} contractId={item.id} />
+            )}
+            {writeFunctionList?.length > 0 && (
+              <ContentABI title="State-Changing Functions" abi={writeFunctionList} contractId={item.id} />
+            )}
           </Fragment>
         )
       })}
