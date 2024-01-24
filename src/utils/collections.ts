@@ -1,4 +1,5 @@
 import { UUID } from 'crypto'
+import filter from 'lodash.filter'
 import find from 'lodash.find'
 import forEach from 'lodash.foreach'
 
@@ -42,4 +43,19 @@ export const removeItemInCollection = <T extends Item>(collections: T[], itemId:
       i.items = i.items.filter((it) => it.id !== itemId)
     }
   })
+}
+
+export const isSmartContract = (item: Item) => {
+  return item.type === EVMItemType.SmartContract
+}
+
+export const isItemMatchSearchText = (item: Item, searchText: string) => {
+  return item.name.toLowerCase().includes(searchText.toLowerCase())
+}
+
+export const isFolderHaveItemsMatchSearchText = (folder: EVMCollection | EVMFolder, searchText: string) => {
+  const flattenedItems = flattenItems(folder.items)
+  const requestItems = filter(flattenedItems, (item) => isSmartContract(item))
+
+  return find(requestItems, (request) => isItemMatchSearchText(request, searchText))
 }

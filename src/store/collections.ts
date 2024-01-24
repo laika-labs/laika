@@ -44,6 +44,7 @@ export interface EVMABIMethod {
   outputs: EVMABIMethodInputsOutputs[]
   stateMutability?: string
   anonymous?: boolean
+  comment?: string
 }
 
 export interface EVMABIMethodInputsOutputs {
@@ -65,6 +66,7 @@ export const useEVMCollectionStore = create<{
   updateContractChainId: (id: UUID, chainId: number) => void
   updateContractAddress: (id: UUID, address: string) => void
   updateContractABI: (id: UUID, abi: string) => void
+  updateContractComment: (id: UUID, methodName: string, comment: string) => void
   removeItem: (id: UUID) => void
 }>()(
   persist(
@@ -190,6 +192,26 @@ export const useEVMCollectionStore = create<{
             collections: state.collections,
           }
         }),
+      updateContractComment: (id: UUID, methodName: string, comment: string) =>
+        set((state) => {
+          const item = findItemInCollections(state.collections, id)
+
+          if (item && item.type === EVMItemType.SmartContract && item.contract && item.contract.abi) {
+            const abi = JSON.parse(item.contract.abi)
+            const newAbi = abi.map((method: EVMABIMethod) => {
+              if (method.name === methodName) {
+                method.comment = comment
+              }
+              return method
+            })
+            item.contract.abi = JSON.stringify(newAbi)
+          }
+
+          return {
+            collections: state.collections,
+          }
+        }),
+
       removeItem: (id: UUID) =>
         set((state) => {
           removeItemInCollection(state.collections, id)
