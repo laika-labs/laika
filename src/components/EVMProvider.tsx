@@ -64,7 +64,7 @@ export function EVMProvider({ children }: PropsWithChildren) {
   )
   const { connectors } = getDefaultWallets({
     appName: 'Laika',
-    projectId: 'YOUR_PROJECT_ID',
+    projectId: import.meta.env.VITE_PROJECT_ID ?? 'YOUR_PROJECT_ID',
     chains,
   })
 
