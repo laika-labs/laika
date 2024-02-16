@@ -53,31 +53,33 @@ export interface EVMABIMethodInputsOutputs {
   components?: EVMABIMethodInputsOutputs[]
 }
 
-const collections: EVMCollection[] = []
-
-export const useEVMCollectionStore = create<{
+export interface EVMCollectionStore {
   collections: EVMCollection[]
-  addCollection: () => UUID
+  addCollection: (name?: string) => UUID
   removeCollection: (id: UUID) => void
   renameItem: (id: UUID, name: string) => void
   toggleOpen: (id: UUID) => void
-  addFolder: (id: UUID) => void
+  addFolder: (id: UUID, name?: string) => UUID
   addSmartContract: (id: UUID, cb: (contract: EVMContract) => void) => void
   updateContractChainId: (id: UUID, chainId: number) => void
   updateContractAddress: (id: UUID, address: string) => void
   updateContractABI: (id: UUID, abi: string) => void
   updateContractComment: (id: UUID, methodName: string, comment: string) => void
   removeItem: (id: UUID) => void
-}>()(
+}
+
+const collections: EVMCollection[] = []
+
+export const useEVMCollectionStore = create<EVMCollectionStore>()(
   persist(
     (set) => ({
       collections: [...collections],
-      addCollection: () => {
+      addCollection: (name) => {
         const id = crypto.randomUUID()
         set((state) => {
           const collection: EVMCollection = {
             id,
-            name: 'New Collection',
+            name: name ?? 'New Collection',
             type: EVMItemType.Collection,
             isOpen: true,
             items: [],
@@ -115,11 +117,12 @@ export const useEVMCollectionStore = create<{
             collections: state.collections,
           }
         }),
-      addFolder: (id: UUID) =>
+      addFolder: (id, name) => {
+        const folderId = crypto.randomUUID()
         set((state) => {
           const folder: EVMFolder = {
-            id: crypto.randomUUID(),
-            name: 'New Folder',
+            id: folderId,
+            name: name ?? 'New Folder',
             type: EVMItemType.Folder,
             isOpen: true,
             items: [],
@@ -134,7 +137,9 @@ export const useEVMCollectionStore = create<{
           return {
             collections: state.collections,
           }
-        }),
+        })
+        return folderId
+      },
       addSmartContract: (id: UUID, cb: (contract: EVMContract) => void) =>
         set((state) => {
           const contract: EVMContract = {
