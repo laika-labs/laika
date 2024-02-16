@@ -17,6 +17,10 @@ export default function Collections() {
     setSearch(e.target.value)
   }
 
+  const handleAddCollection = () => {
+    addCollection()
+  }
+
   return (
     <Allotment className="w-full h-full" vertical>
       <Allotment.Pane minSize={48} maxSize={48}>
@@ -43,7 +47,7 @@ export default function Collections() {
         ) : (
           <div className="flex flex-col items-center px-2 py-12 space-y-4 select-none text-muted-foreground">
             <p className="text-sm text-center">Create a collection for your smart contracts.</p>
-            <Button variant="secondary" size="sm" onClick={addCollection}>
+            <Button variant="secondary" size="sm" onClick={handleAddCollection}>
               Create Collection
             </Button>
           </div>
