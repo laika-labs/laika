@@ -21,7 +21,7 @@ export default function DocumentList() {
   useEffect(() => {
     if (
       (activeDocumentId === null && collections.length > 0) ||
-      (activeDocumentId !== null && findItem(collections, activeDocumentId) === undefined)
+      (activeDocumentId !== null && collections.length > 0 && findItem(collections, activeDocumentId) === undefined)
     ) {
       setActiveDocument(collections[0].id)
     }
