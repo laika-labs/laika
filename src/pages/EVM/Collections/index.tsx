@@ -6,12 +6,15 @@ import { Input } from '@/components/ui/input'
 import { useEVMCollectionStore } from '@/store/collections'
 
 import Folder from './Folder'
+import Help from './Help'
 import NewRequest from './NewRequest'
 
 export default function Collections() {
   const [search, setSearch] = useState('')
 
   const { collections, addCollection } = useEVMCollectionStore()
+
+  const appCollections = localStorage.getItem('app_collections')
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
@@ -26,18 +29,19 @@ export default function Collections() {
       <Allotment.Pane minSize={48} maxSize={48}>
         <div className="flex items-center justify-between p-2">
           <small className="text-sm font-medium leading-none">Collections</small>
-          <NewRequest />
+          <div className="flex gap-2">
+            {appCollections !== null && <Help appCollections={appCollections} />}
+            <NewRequest />
+          </div>
         </div>
       </Allotment.Pane>
-      <Allotment.Pane minSize={36} maxSize={36}>
-        <div className="px-2">
-          <Input
-            type="text"
-            placeholder="Search"
-            className="p-0 border-none focus-visible:ring-0"
-            onChange={handleSearch}
-          />
-        </div>
+      <Allotment.Pane minSize={36} maxSize={36} className="px-2">
+        <Input
+          type="text"
+          placeholder="Search"
+          className="p-0 border-none focus-visible:ring-0"
+          onChange={handleSearch}
+        />
       </Allotment.Pane>
       <Allotment.Pane className="py-1">
         {collections.length > 0 ? (
