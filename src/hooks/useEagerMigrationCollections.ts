@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { toast } from '@/components/ui/use-toast'
 import { useCookie } from '@/hooks/useCookie'
 import { useEVMCollectionStore } from '@/store/collections'
 import { migrateCollections } from '@/utils/migration'
@@ -34,7 +35,10 @@ export const useEagerMigrationCollections = () => {
             updateContractABI,
           })
         } catch {
-          /* empty */
+          toast({
+            variant: 'destructive',
+            title: 'Auto migration legacy collections failed.',
+          })
         }
         updateIsMiragrated('true', { expires: new Date(2024, 3, 30) })
       }
