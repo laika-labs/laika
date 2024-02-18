@@ -53,12 +53,12 @@ export default function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps
       try {
         const chain = filteredChains.find((chain) => chain.chainId === data.chainId)
         if (!chain) {
-          return
+          throw new Error('Chain not found.')
         }
 
         const explorer = chain.explorers?.find((explorer) => getabi?.[explorer.url])
         if (!explorer) {
-          return
+          throw new Error('Chain explorer not found.')
         }
 
         setLoading(true)
