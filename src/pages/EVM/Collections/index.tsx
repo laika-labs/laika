@@ -43,19 +43,21 @@ export default function Collections() {
           onChange={handleSearch}
         />
       </Allotment.Pane>
-      <Allotment.Pane className="py-1 !overflow-y-auto">
-        {collections.length > 0 ? (
-          collections.map((collection) => {
-            return <Folder key={collection.id} folder={collection} search={search} />
-          })
-        ) : (
-          <div className="flex flex-col items-center px-2 py-12 space-y-4 select-none text-muted-foreground">
-            <p className="text-sm text-center">Create a collection for your smart contracts.</p>
-            <Button variant="secondary" size="sm" onClick={handleAddCollection}>
-              Create Collection
-            </Button>
-          </div>
-        )}
+      <Allotment.Pane className="py-1">
+        <div className="h-full overflow-y-auto">
+          {collections.length > 0 ? (
+            collections.map((collection) => {
+              return <Folder key={collection.id} folder={collection} search={search} />
+            })
+          ) : (
+            <div className="flex flex-col items-center px-2 py-12 space-y-4 select-none text-muted-foreground">
+              <p className="text-sm text-center">Create a collection for your smart contracts.</p>
+              <Button variant="secondary" size="sm" onClick={handleAddCollection}>
+                Create Collection
+              </Button>
+            </div>
+          )}
+        </div>
       </Allotment.Pane>
     </Allotment>
   )

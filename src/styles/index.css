@@ -48,6 +48,14 @@
     --input: 240 3.7% 15.9%;
     --ring: 346.8 77.2% 49.8%;
   }
+
+  ::-webkit-scrollbar {
+    @apply w-3.5 h-1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply border-4 border-transparent border-solid rounded-full bg-secondary bg-clip-padding;
+  }
 }
 
 @layer base {
