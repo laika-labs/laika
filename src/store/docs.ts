@@ -1,10 +1,9 @@
-import { UUID } from 'crypto'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 export const useEVMDocsStore = create<{
-  activeDocumentId: UUID | null
-  setActiveDocument: (id: UUID | null) => void
+  activeDocumentId: string | null
+  setActiveDocument: (id: string | null) => void
 }>()(
   persist(
     (set) => ({

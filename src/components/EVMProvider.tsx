@@ -1,4 +1,3 @@
-import { UUID } from 'crypto'
 import { PropsWithChildren, useMemo } from 'react'
 import { defineChain } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -20,7 +19,7 @@ export function EVMProvider({ children }: PropsWithChildren) {
 
   const { resolvedTheme } = useTheme()
 
-  const smartContract = findItemInCollections(collections, activeTabId as UUID) as EVMContract
+  const smartContract = findItemInCollections(collections, activeTabId as string) as EVMContract
 
   const definedChain = useMemo(() => {
     if (!activeTabId) {

@@ -1,4 +1,3 @@
-import { UUID } from 'crypto'
 import { useMemo } from 'react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -17,7 +16,7 @@ export default function RequestPane() {
   const { activeTabId } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
-    return findItemInCollections(collections, activeTabId as UUID) as EVMContract
+    return findItemInCollections(collections, activeTabId as string) as EVMContract
   }, [activeTabId, collections])
 
   return (

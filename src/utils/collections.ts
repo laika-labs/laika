@@ -1,4 +1,3 @@
-import { UUID } from 'crypto'
 import filter from 'lodash.filter'
 import find from 'lodash.find'
 import forEach from 'lodash.foreach'
@@ -25,17 +24,17 @@ export const flattenItems = <T extends Item>(items: T[]): T[] => {
   return flattenedItems
 }
 
-export const findItem = (items: Item[], itemId: UUID) => {
+export const findItem = (items: Item[], itemId: string) => {
   return find(items, (i) => i.id === itemId)
 }
 
-export const findItemInCollections = <T extends Item>(collections: T[], itemId: UUID) => {
+export const findItemInCollections = <T extends Item>(collections: T[], itemId: string) => {
   const flattenedItems = flattenItems(collections)
 
   return findItem(flattenedItems, itemId)
 }
 
-export const removeItemInCollection = <T extends Item>(collections: T[], itemId: UUID) => {
+export const removeItemInCollection = <T extends Item>(collections: T[], itemId: string) => {
   const flattenedItems = flattenItems(collections)
 
   forEach(flattenedItems, (i) => {

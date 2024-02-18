@@ -2,7 +2,7 @@ import { EVMABIMethod } from '@/store/collections'
 import FunctionContent from './FunctionContent'
 
 interface ABIProps {
-  contractId: `${string}-${string}-${string}-${string}-${string}`
+  contractId: string
   title: string
   abi: EVMABIMethod[]
 }

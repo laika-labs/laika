@@ -43,7 +43,7 @@ export default function Collections() {
           onChange={handleSearch}
         />
       </Allotment.Pane>
-      <Allotment.Pane className="py-1 !overflow-y-scroll">
+      <Allotment.Pane className="py-1 !overflow-y-auto">
         {collections.length > 0 ? (
           collections.map((collection) => {
             return <Folder key={collection.id} folder={collection} search={search} />

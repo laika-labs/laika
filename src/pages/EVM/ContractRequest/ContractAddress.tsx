@@ -1,4 +1,3 @@
-import { UUID } from 'crypto'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Address, isAddress } from 'viem'
@@ -24,7 +23,7 @@ const formSchema = z.object({
 })
 
 interface ContractAddressProps {
-  id: UUID
+  id: string
   chainId?: number
   address: string
 }

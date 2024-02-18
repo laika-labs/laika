@@ -1,5 +1,4 @@
 import { EVMCollectionStore } from '@/store/collections'
-import { UUID } from 'crypto'
 
 interface LagacySmartContract {
   address: string
@@ -28,7 +27,7 @@ export const migrateCollections = (
     'addCollection' | 'addFolder' | 'addSmartContract' | 'updateContractAddress' | 'updateContractABI'
   >,
 ) => {
-  const traverse = (id: UUID, list: (LagacySmartContract | LagacyFolder)[]) => {
+  const traverse = (id: string, list: (LagacySmartContract | LagacyFolder)[]) => {
     const addressABIPair: Record<string, unknown[]> = {}
     list.forEach((item) => {
       if (item.address) {

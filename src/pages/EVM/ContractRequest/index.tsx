@@ -1,5 +1,4 @@
 import { Allotment, AllotmentHandle, LayoutPriority } from 'allotment'
-import { UUID } from 'crypto'
 import { X } from 'lucide-react'
 import { useMemo, useRef } from 'react'
 
@@ -21,7 +20,7 @@ export default function ContractRequest() {
   const { tabs, activeTabId, setActiveTab, removeTab, clearTabs } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
-    return findItemInCollections(collections, activeTabId as UUID) as EVMContract
+    return findItemInCollections(collections, activeTabId as string) as EVMContract
   }, [activeTabId, collections])
 
   const handleToolbarChange = (sizes: number[]) => {

@@ -1,5 +1,4 @@
 import { Allotment } from 'allotment'
-import { UUID } from 'crypto'
 import { FileText } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -12,7 +11,7 @@ export default function DocumentList() {
   const { collections } = useEVMCollectionStore()
   const { activeDocumentId, setActiveDocument } = useEVMDocsStore()
 
-  const handleClick = (id: UUID) => {
+  const handleClick = (id: string) => {
     return () => {
       setActiveDocument(id)
     }

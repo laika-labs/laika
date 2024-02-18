@@ -1,4 +1,3 @@
-import { UUID } from 'crypto'
 import { X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
@@ -28,7 +27,7 @@ export default function CodeSnippet({ handleClose }: CodeSnippetProps) {
   const { activeTabId } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
-    return findItemInCollections(collections, activeTabId as UUID) as EVMContract
+    return findItemInCollections(collections, activeTabId as string) as EVMContract
   }, [activeTabId, collections])
 
   const codegen = useMemo(() => {

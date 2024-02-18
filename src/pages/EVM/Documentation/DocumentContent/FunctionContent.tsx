@@ -1,7 +1,9 @@
-import { Editor, EditorProps } from '@monaco-editor/react'
-import { EVMABIMethod, useEVMCollectionStore } from '@/store/collections'
 import { formatAbi } from 'abitype'
+
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import { EVMABIMethod, useEVMCollectionStore } from '@/store/collections'
+import { Editor, EditorProps } from '@monaco-editor/react'
 
 const editorOptions: EditorProps['options'] = {
   readOnly: true,
@@ -31,7 +33,7 @@ export default function FunctionContent({
 }: {
   method: EVMABIMethod
   abi: EVMABIMethod[]
-  contractId: `${string}-${string}-${string}-${string}-${string}`
+  contractId: string
 }) {
   const { updateContractComment } = useEVMCollectionStore()
   const handleUpdateComment = (comment: string) => {
@@ -42,9 +44,10 @@ export default function FunctionContent({
     <>
       <p className="leading-7 [&:not(:first-child)]:mt-6">{method.name}</p>
       <Input
-        className={`my-1 border-none shadow-none resize-none hover:bg-secondary transition-colors duration-200 ${
-          method.comment ? '' : 'text-secondary-600'
-        }`}
+        className={cn(
+          'my-1 border-none shadow-none resize-none hover:bg-secondary transition-colors duration-200',
+          !method.comment && 'text-secondary-600',
+        )}
         placeholder="Click here to add comment"
         onChange={(e) => handleUpdateComment(e.target.value)}
         value={method.comment || ''}

@@ -1,11 +1,10 @@
-import { UUID } from 'crypto'
 import { ChangeEvent, KeyboardEvent, useCallback, useState } from 'react'
 
 import { Input } from '@/components/ui/input'
 import { useEVMCollectionStore } from '@/store/collections'
 
 interface RenameProps {
-  id: UUID
+  id: string
   itemName: string
   onSave: () => void
 }
