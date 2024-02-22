@@ -31,7 +31,12 @@ export default function ContractRequest() {
 
   return (
     <Allotment vertical proportionalLayout={false}>
-      <Allotment.Pane minSize={48} maxSize={48} priority={LayoutPriority.Low} className="flex">
+      <Allotment.Pane
+        minSize={48}
+        maxSize={48}
+        priority={LayoutPriority.Low}
+        className="flex !overflow-x-scroll no-scrollbar"
+      >
         {tabs.map((tab) => {
           const found = findItemInCollections(collections, tab)
           if (found === undefined) {
@@ -50,7 +55,7 @@ export default function ContractRequest() {
               )}
               onClick={() => setActiveTab(tab)}
             >
-              <small className="py-2 text-sm font-medium leading-none truncate">{name}</small>
+              <small className="py-2 text-sm font-medium leading-none text-left truncate w-44">{name}</small>
               <span
                 className={cn(
                   buttonVariants(),
