@@ -1,11 +1,11 @@
-import { Copy, X } from 'lucide-react'
+import { Check, Copy, X } from 'lucide-react'
 import { ChangeEvent, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { toast } from '@/components/ui/use-toast'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 
 const unitList = [
   { name: 'Wei', sup: -18, unit: 1 },
@@ -28,15 +28,20 @@ interface UnitConverterProps {
 export default function UnitConverter({ handleClose }: UnitConverterProps) {
   const [value, setValue] = useState('1')
   const [unit, setUnit] = useState(19)
+  const [copyIndex, setCopyIndex] = useState<number | null>(null)
 
   const [, copy] = useCopyToClipboard()
 
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, index: number) => {
     return async () => {
       if (await copy(text)) {
+        setCopyIndex(index)
         toast({
           description: 'Copied to clipboard',
         })
+        setTimeout(() => {
+          setCopyIndex(null)
+        }, 1000)
       } else {
         toast({
           description: 'Failed to copy to clipboard',
@@ -67,9 +72,9 @@ export default function UnitConverter({ handleClose }: UnitConverterProps) {
             <Button
               variant="secondary"
               size="icon"
-              onClick={handleCopy(formatUnits(parseUnits(value, unit), item.unit))}
+              onClick={handleCopy(formatUnits(parseUnits(value, unit), item.unit), index)}
             >
-              <Copy className="w-4 h-4" />
+              {index === copyIndex ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </Button>
             <Input
               type="number"
