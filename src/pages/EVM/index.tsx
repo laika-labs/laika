@@ -1,6 +1,6 @@
-import { Allotment, LayoutPriority } from 'allotment'
+import { Allotment, AllotmentHandle, LayoutPriority } from 'allotment'
 import { BookText, Folders } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -13,10 +13,19 @@ import ContractRequest from './ContractRequest'
 import DocumentContent from './Documentation/DocumentContent'
 import DocumentList from './Documentation/DocumentList'
 import Welcome from './Welcome'
+import Toolbar from './Toolbar'
 
 export default function EVM() {
+  const toolbarRef = useRef<AllotmentHandle>(null)
+
   const { tabs } = useEVMTabStore()
   const { setChains } = useEVMChainsStore()
+
+  const handleToolbarChange = (sizes: number[]) => {
+    if (sizes?.[1] > 48 && sizes?.[1] < 384) {
+      toolbarRef.current?.resize([sizes?.[0], 384])
+    }
+  }
 
   useEffect(() => {
     const fetchChains = async () => {
@@ -87,7 +96,12 @@ export default function EVM() {
         </Allotment.Pane>
         <Allotment.Pane priority={LayoutPriority.Low}>
           <TabsContent value="collections" className="w-full h-full m-0">
-            {displayContractRequest}
+            <Allotment ref={toolbarRef} onChange={handleToolbarChange} proportionalLayout={false}>
+              <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
+              <Allotment.Pane minSize={48} maxSize={448} preferredSize={48} priority={LayoutPriority.Low}>
+                <Toolbar toolbarRef={toolbarRef} />
+              </Allotment.Pane>
+            </Allotment>
           </TabsContent>
           <TabsContent value="docs" className="w-full h-full m-0">
             <DocumentContent />
