@@ -1,5 +1,5 @@
 import { Allotment, AllotmentHandle } from 'allotment'
-import { Code2 } from 'lucide-react'
+import { ArrowRightLeft, Code2 } from 'lucide-react'
 import { RefObject, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 
 import CodeSnippet from './CodeSnippet'
+import { useEVMTabStore } from '@/store/tabs'
+import UnitConverter from './UnitConverter'
 
 interface ToolbarProps {
   toolbarRef: RefObject<AllotmentHandle>
@@ -17,6 +19,8 @@ export default function Toolbar({ toolbarRef }: ToolbarProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
   const [lastValue, setLastValue] = useState('code')
+
+  const { activeTabId } = useEVMTabStore()
 
   const handleValueChange = (value: string) => {
     setValue(value)
@@ -54,30 +58,54 @@ export default function Toolbar({ toolbarRef }: ToolbarProps) {
       <Allotment onChange={handleToolbarChange}>
         <Allotment.Pane minSize={48} maxSize={48}>
           <TooltipProvider>
-            <TabsList className="p-2 bg-inherit">
+            <TabsList className="gap-2 p-2 bg-inherit">
+              {activeTabId !== null && (
+                <Tooltip>
+                  <TabsTrigger
+                    value="code"
+                    className={cn('data-[state=active]:shadow-none', open && 'data-[state=active]:text-primary')}
+                    onClick={handleToolbarOpen}
+                    asChild
+                  >
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" className="h-auto p-2">
+                        <Code2 className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                  </TabsTrigger>
+                  <TooltipContent side="left">
+                    <p>Code Snippet</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
               <Tooltip>
                 <TabsTrigger
-                  value="code"
+                  value="unit-converter"
                   className={cn('data-[state=active]:shadow-none', open && 'data-[state=active]:text-primary')}
                   onClick={handleToolbarOpen}
                   asChild
                 >
                   <TooltipTrigger asChild>
                     <Button variant="ghost" className="h-auto p-2">
-                      <Code2 className="w-4 h-4" />
+                      <ArrowRightLeft className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
                 </TabsTrigger>
                 <TooltipContent side="left">
-                  <p>Code Snippet</p>
+                  <p>Unit Converter</p>
                 </TooltipContent>
               </Tooltip>
             </TabsList>
           </TooltipProvider>
         </Allotment.Pane>
         <Allotment.Pane maxSize={448}>
-          <TabsContent value="code" className="w-full h-full m-0">
-            <CodeSnippet handleClose={handleToolbarClose} />
+          {activeTabId !== null && (
+            <TabsContent value="code" className="w-full h-full m-0">
+              <CodeSnippet handleClose={handleToolbarClose} />
+            </TabsContent>
+          )}
+          <TabsContent value="unit-converter" className="w-full h-full m-0">
+            <UnitConverter handleClose={handleToolbarClose} />
           </TabsContent>
         </Allotment.Pane>
       </Allotment>
