@@ -79,7 +79,15 @@ export default function UnitConverter({ handleClose }: UnitConverterProps) {
               onChange={handleChange(item.unit)}
             />
             <Button variant="secondary" className="justify-start w-32 whitespace-nowrap">
-              {item.name} (10{Boolean(item.sup) && <sup>{item.sup}</sup>})
+              {item.name} (
+              {item.sup !== 0 ? (
+                <>
+                  10 <sup>{item.sup}</sup>
+                </>
+              ) : (
+                1
+              )}
+              )
             </Button>
           </div>
         ))}
