@@ -54,6 +54,7 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.filter": "^4.6.9",

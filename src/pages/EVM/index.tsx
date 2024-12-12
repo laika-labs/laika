@@ -2,6 +2,7 @@ import { Allotment, AllotmentHandle, LayoutPriority } from 'allotment'
 import { BookText, Folders } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 
+import Chains from '@/lib/chains.json'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -29,8 +30,9 @@ export default function EVM() {
 
   useEffect(() => {
     const fetchChains = async () => {
-      const res = await fetch('https://chainid.network/chains.json')
-      const chains = await res.json()
+      // const res = await fetch('https://chainid.network/chains.json')
+      // const chains = await res.json()
+      const chains = Chains
       setChains(chains)
     }
     fetchChains()
@@ -56,7 +58,7 @@ export default function EVM() {
                       asChild
                     >
                       <TooltipTrigger asChild>
-                        <Button variant="ghost" className="h-auto p-2">
+                        <Button variant="ghost" className="p-2 h-auto">
                           <Folders className="w-4 h-4" />
                         </Button>
                       </TooltipTrigger>
@@ -72,7 +74,7 @@ export default function EVM() {
                       asChild
                     >
                       <TooltipTrigger asChild>
-                        <Button variant="ghost" className="h-auto p-2">
+                        <Button variant="ghost" className="p-2 h-auto">
                           <BookText className="w-4 h-4" />
                         </Button>
                       </TooltipTrigger>
@@ -85,17 +87,17 @@ export default function EVM() {
               </TooltipProvider>
             </Allotment.Pane>
             <Allotment.Pane>
-              <TabsContent value="collections" className="w-full h-full m-0">
+              <TabsContent value="collections" className="m-0 w-full h-full">
                 <Collections />
               </TabsContent>
-              <TabsContent value="docs" className="w-full h-full m-0">
+              <TabsContent value="docs" className="m-0 w-full h-full">
                 <DocumentList />
               </TabsContent>
             </Allotment.Pane>
           </Allotment>
         </Allotment.Pane>
         <Allotment.Pane priority={LayoutPriority.Low}>
-          <TabsContent value="collections" className="w-full h-full m-0">
+          <TabsContent value="collections" className="m-0 w-full h-full">
             <Allotment ref={toolbarRef} onChange={handleToolbarChange} proportionalLayout={false}>
               <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
               <Allotment.Pane minSize={48} maxSize={448} preferredSize={48} priority={LayoutPriority.Low}>
@@ -103,7 +105,7 @@ export default function EVM() {
               </Allotment.Pane>
             </Allotment>
           </TabsContent>
-          <TabsContent value="docs" className="w-full h-full m-0">
+          <TabsContent value="docs" className="m-0 w-full h-full">
             <DocumentContent />
           </TabsContent>
         </Allotment.Pane>
