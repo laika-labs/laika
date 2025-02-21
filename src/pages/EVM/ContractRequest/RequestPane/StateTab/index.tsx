@@ -35,6 +35,7 @@ export default function StateTab({ smartContract }: { smartContract: EVMContract
   const { data, isError, isLoading } = useContractReads({
     contracts: prefetchableMethods,
   })
+  console.log("DEBUG - Contract Data:", data)
 
   useEffect(() => {
     if (isError) {
