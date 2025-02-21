@@ -1,8 +1,6 @@
 import { Allotment } from 'allotment'
 import { Outlet } from 'react-router-dom'
 
-import Announcement from '@/components/Announcement'
-import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import Sidenav from '@/components/Sidenav'
 import { useEagerMigrationCollections } from '@/hooks/useEagerMigrationCollections'
@@ -11,9 +9,6 @@ export default function Root() {
   useEagerMigrationCollections()
   return (
     <Allotment className="w-screen h-screen" vertical>
-      <Allotment.Pane minSize={24} maxSize={24} className="flex">
-        <Announcement />
-      </Allotment.Pane>
       <Allotment.Pane minSize={48} maxSize={48} className="flex">
         <Header />
       </Allotment.Pane>
@@ -26,9 +21,6 @@ export default function Root() {
             <Outlet />
           </Allotment.Pane>
         </Allotment>
-      </Allotment.Pane>
-      <Allotment.Pane minSize={32} maxSize={32} className="flex">
-        <Footer />
       </Allotment.Pane>
     </Allotment>
   )
