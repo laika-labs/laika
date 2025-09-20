@@ -90,8 +90,8 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
     <Dialog>
       <DialogTrigger>
         <Card className="text-center">
-          <CardHeader className="items-center">
-            <Plus className="h-10 w-10" />
+          <CardHeader className="justify-center">
+            <Plus className="size-10" />
           </CardHeader>
           <CardContent>
             <CardTitle>New Request</CardTitle>

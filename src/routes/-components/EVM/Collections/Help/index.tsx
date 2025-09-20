@@ -75,7 +75,7 @@ export function Help({ appCollections }: HelpProps) {
         <div className="grid grid-cols-2 gap-4">
           <Card className="cursor-pointer text-center" onClick={handleExport}>
             <CardHeader className="items-center">
-              <Download className="h-10 w-10" />
+              <Download className="size-10" />
             </CardHeader>
             <CardContent>
               <CardTitle>Export</CardTitle>
@@ -86,7 +86,7 @@ export function Help({ appCollections }: HelpProps) {
           </Card>
           <Card className="cursor-pointer text-center" onClick={handleMigrate}>
             <CardHeader className="items-center">
-              <PackagePlus className="h-10 w-10" />
+              <PackagePlus className="size-10" />
             </CardHeader>
             <CardContent>
               <CardTitle>Migrate</CardTitle>

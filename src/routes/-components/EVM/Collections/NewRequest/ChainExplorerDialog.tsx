@@ -91,8 +91,8 @@ export function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps) {
     <Dialog>
       <DialogTrigger>
         <Card className="text-center">
-          <CardHeader className="items-center">
-            <Globe className="h-10 w-10" />
+          <CardHeader className="justify-center">
+            <Globe className="size-10" />
           </CardHeader>
           <CardContent>
             <CardTitle>Chain Explorer</CardTitle>
