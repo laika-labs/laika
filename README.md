@@ -10,9 +10,8 @@ Laika is a request builder for web3. It allows you to interact with smart contra
 
 ## Installation
 
-
     git clone https://github.com/laika-labs/laika
-    
+
     bun install
     bun dev
 
@@ -20,7 +19,7 @@ Laika is a request builder for web3. It allows you to interact with smart contra
 
 1. **Connect Wallet**: Select your network.
 2. **Contract Interaction**: Enter a contract address. Laika fetches the ABI and displays methods.
-3.  **Execute Requests**: Fill parameters, send requests, and view responses.
+3. **Execute Requests**: Fill parameters, send requests, and view responses.
 4. **Manage Tabs**: Manage all requests through tabs on the workspace
 
 ## Documentation

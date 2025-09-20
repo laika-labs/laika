@@ -2,18 +2,18 @@ import { v4 as uuidv4 } from 'uuid'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { findItemInCollections, removeItemInCollection } from '@/utils/collections'
+import { findItemInCollections, removeItemInCollection } from '@/lib/collections'
 
-export enum EVMItemType {
-  Collection = 'collection',
-  SmartContract = 'smart-contract',
-  Folder = 'folder',
-}
+export const EVMItemType = {
+  Collection: 'collection',
+  SmartContract: 'smart-contract',
+  Folder: 'folder',
+} as const
 
 export interface EVMContract {
   id: string
   name: string
-  type: EVMItemType.SmartContract
+  type: typeof EVMItemType.SmartContract
   chainId?: number
   contract: {
     address?: string
@@ -24,7 +24,7 @@ export interface EVMContract {
 export interface EVMFolder {
   id: string
   name: string
-  type: EVMItemType.Folder
+  type: typeof EVMItemType.Folder
   isOpen: boolean
   items: (EVMContract | EVMFolder)[]
 }
@@ -32,7 +32,7 @@ export interface EVMFolder {
 export interface EVMCollection {
   id: string
   name: string
-  type: EVMItemType.Collection
+  type: typeof EVMItemType.Collection
   isOpen: boolean
   items: (EVMContract | EVMFolder)[]
 }

@@ -1,9 +1,9 @@
-import Cookies from 'js-cookie'
 import { useCallback, useState } from 'react'
+import Cookies from 'js-cookie'
 
-export const useCookie = (
+export function useCookie(
   cookieName: string,
-): [string | null, (newValue: string, options?: Cookies.CookieAttributes) => void, () => void] => {
+): [string | null, (newValue: string, options?: Cookies.CookieAttributes) => void, () => void] {
   const [value, setValue] = useState<string | null>(() => Cookies.get(cookieName) || null)
 
   const updateCookie = useCallback(

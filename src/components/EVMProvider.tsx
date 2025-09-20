@@ -1,18 +1,17 @@
-import { PropsWithChildren, useMemo } from 'react'
-import { defineChain } from 'viem'
-import { mainnet } from 'viem/chains'
-import { configureChains, createConfig, WagmiConfig } from 'wagmi'
-
-import { useEVMChainsStore } from '@/store/chains'
-import { EVMContract, useEVMCollectionStore } from '@/store/collections'
-import { useEVMTabStore } from '@/store/tabs'
-import { findItemInCollections } from '@/utils/collections'
+import { useMemo } from 'react'
 import { darkTheme, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc'
+import { defineChain, http } from 'viem'
+import { createConfig, WagmiProvider } from 'wagmi'
+import { mainnet } from 'wagmi/chains'
+
+import { findItemInCollections } from '@/lib/collections'
+import { useEVMChainsStore } from '@/store/chains'
+import { useEVMCollectionStore, type EVMContract } from '@/store/collections'
+import { useEVMTabStore } from '@/store/tabs'
 
 import { useTheme } from './ThemeProvider'
 
-export function EVMProvider({ children }: PropsWithChildren) {
+export function EVMProvider({ children }: React.PropsWithChildren) {
   const { collections } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
   const { chains: chainList } = useEVMChainsStore()
@@ -51,26 +50,17 @@ export function EVMProvider({ children }: PropsWithChildren) {
     })
   }, [activeTabId, chainList, smartContract?.chainId])
 
-  const { chains, publicClient } = configureChains(
-    [definedChain],
-    [
-      jsonRpcProvider({
-        rpc: () => ({
-          http: definedChain?.rpcUrls.default.http[0],
-        }),
-      }),
-    ],
-  )
   const { connectors } = getDefaultWallets({
     appName: 'Laika',
     projectId: import.meta.env.VITE_PROJECT_ID ?? 'YOUR_PROJECT_ID',
-    chains,
   })
 
   const wagmiConfig = createConfig({
-    autoConnect: true,
+    chains: [definedChain],
+    transports: {
+      [definedChain.id]: http(),
+    },
     connectors,
-    publicClient,
   })
 
   const resolvedRainbowKitTheme = useMemo(() => {
@@ -82,10 +72,8 @@ export function EVMProvider({ children }: PropsWithChildren) {
   }, [resolvedTheme])
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider theme={resolvedRainbowKitTheme} chains={chains}>
-        {children}
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <WagmiProvider config={wagmiConfig}>
+      <RainbowKitProvider theme={resolvedRainbowKitTheme}>{children}</RainbowKitProvider>
+    </WagmiProvider>
   )
 }
