@@ -1,23 +1,22 @@
-import { Github, Twitter } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { GithubIcon, TwitterIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-export default function Footer() {
+export function Footer() {
   return (
-    <div className="flex items-center grow">
+    <div className="flex grow items-center">
       <div className="flex items-center">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="https://github.com/laika-labs/laika" target="_blank">
-            <Github className="w-4 h-4" />
+          <a href="https://github.com/laika-labs/laika" target="_blank">
+            <GithubIcon className="h-4 w-4" />
             <span className="sr-only">Github</span>
-          </Link>
+          </a>
         </Button>
         <Button variant="ghost" size="icon" asChild>
-          <Link to="https://twitter.com/getlaikaapp" target="_blank">
-            <Twitter className="w-4 h-4" />
+          <a href="https://twitter.com/getlaikaapp" target="_blank">
+            <TwitterIcon className="h-4 w-4" />
             <span className="sr-only">Twitter</span>
-          </Link>
+          </a>
         </Button>
       </div>
     </div>

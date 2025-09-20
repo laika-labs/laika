@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
-import { toast } from '@/components/ui/use-toast'
 import { useCookie } from '@/hooks/useCookie'
+import { migrateCollections } from '@/lib/migration'
 import { useEVMCollectionStore } from '@/store/collections'
-import { migrateCollections } from '@/utils/migration'
 
-export const useEagerMigrationCollections = () => {
+export function useEagerMigrationCollections() {
   const [isMounted, setIsMounted] = useState(false)
 
   const { collections, addCollection, addFolder, addSmartContract, updateContractAddress, updateContractABI } =
@@ -35,10 +35,7 @@ export const useEagerMigrationCollections = () => {
             updateContractABI,
           })
         } catch {
-          toast({
-            variant: 'destructive',
-            title: 'Auto migration legacy collections failed.',
-          })
+          toast.error('Auto migration legacy collections failed.')
         }
         updateIsMiragrated('true', { expires: new Date(2024, 3, 30) })
       }

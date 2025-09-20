@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-export const useCopyToClipboard = (): [string | null, (text: string) => Promise<boolean>] => {
+export function useCopyToClipboard(): [string | null, (text: string) => Promise<boolean>] {
   const [copiedText, setCopiedText] = useState<string | null>(null)
 
   const copy = useCallback(async (text: string) => {

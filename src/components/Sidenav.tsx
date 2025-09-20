@@ -1,27 +1,29 @@
-import { NavLink } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 
 import { buttonVariants } from '@/components/ui/button'
 import Ethereum from '@/icons/ethereum.svg?react'
 import { cn } from '@/lib/utils'
 
-export default function Sidenav() {
+export function Sidenav() {
   return (
     <div className="flex flex-col">
-      <NavLink
+      <Link
         to="/"
-        className={({ isActive }) =>
-          cn(
-            buttonVariants({ variant: 'ghost' }),
-            'relative flex flex-col w-full h-auto p-2 space-y-1 text-xs',
-            isActive
-              ? 'before:left-0 before:w-0.5 before:bg-primary before:absolute before:inset-y-0 text-foreground fill-foreground'
-              : 'text-muted-foreground fill-muted-foreground',
-          )
-        }
+        activeProps={{
+          className:
+            'before:bg-primary text-foreground fill-foreground before:absolute before:inset-y-0 before:left-0 before:w-0.5',
+        }}
+        inactiveProps={{
+          className: 'text-muted-foreground fill-muted-foreground',
+        }}
+        className={cn(
+          buttonVariants({ variant: 'ghost' }),
+          'relative flex h-auto w-full flex-col space-y-1 p-2 text-xs',
+        )}
       >
-        <Ethereum className="w-6 h-6" />
+        <Ethereum className="h-6 w-6" />
         <span>EVM</span>
-      </NavLink>
+      </Link>
     </div>
   )
 }
