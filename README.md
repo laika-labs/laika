@@ -1,19 +1,42 @@
 # Laika
 
-Laika is a request builder for web3. It allows you to interact with smart contracts without a single line of code. Laika is like Postman for Blockchains
+Laika is a request builder for web3 - like Postman for blockchains. It allows you to interact with smart contracts without writing code, supporting all EVM-compatible blockchains with universal UI for ABIs.
 
 ## Features
 
-- **Multi-Blockchain Support**: Compatible with all EVM compatible blockchains.
-- **Smart Contract Interaction**: Universal UI for every ABIs.
-- **Request Management**: Send and sign transactions using multiple wallets (via [Rainbow Kit](https://www.rainbowkit.com/))
+- **Multi-Blockchain Support**: Compatible with all EVM compatible blockchains
+- **Smart Contract Interaction**: Universal UI for every ABI with read/write method support
+- **Request Management**: Send and sign transactions using multiple wallets via [RainbowKit](https://www.rainbowkit.com/)
+- **Collections & Organization**: Hierarchical project organization (Collections → Folders → Smart Contracts)
+- **Code Generation**: Generate JavaScript code snippets (web3.js, ethers.js) from contract interactions
+- **Integrated Documentation**: Built-in ABI documentation viewer with Monaco Editor
+- **Multi-tab Workspace**: Manage multiple contract requests simultaneously
+
+## Tech Stack
+
+- React 19 + TypeScript + Vite
+- TanStack Router (file-based routing)
+- Zustand (state management with persistence)
+- Tailwind CSS v4 + shadcn/ui components
+- wagmi + viem + RainbowKit (Web3 integration)
+- Monaco Editor (code/ABI display)
 
 ## Installation
 
-    git clone https://github.com/laika-labs/laika
+```bash
+git clone https://github.com/laika-labs/laika
+cd laika
+bun install
+bun run dev
+```
 
-    bun install
-    bun dev
+## Development Commands
+
+- **Development server**: `bun run dev`
+- **Build**: `bun run build`
+- **Linting**: `bun run lint`
+- **Formatting**: `bun run format`
+- **Preview build**: `bun run preview`
 
 ## Usage
 
