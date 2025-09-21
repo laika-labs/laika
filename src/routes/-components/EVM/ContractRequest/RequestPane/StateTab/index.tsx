@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
 import type { Abi, Address } from 'viem'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -30,7 +30,7 @@ export function StateTab({ smartContract }: { smartContract: EVMContract }) {
     })
   }, [smartContract.chainId, smartContract.contract.abi, smartContract.contract?.address])
 
-  const { data, isError, isLoading } = useContractReads({
+  const { data, isError, isLoading } = useReadContracts({
     contracts: prefetchableMethods,
   })
 
