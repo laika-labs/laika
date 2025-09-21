@@ -118,6 +118,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  button, [role="button"] {
+    cursor: pointer;
+  }
   
   ::-webkit-scrollbar {
     @apply w-3.5 h-1;
