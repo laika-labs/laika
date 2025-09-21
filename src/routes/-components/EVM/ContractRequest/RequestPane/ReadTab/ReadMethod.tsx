@@ -93,7 +93,7 @@ export function ReadMethod({
           </div>
         </form>
       </CardContent>
-      <CardFooter className="px-4 pb-4">
+      <CardFooter>
         <Button size="sm" onClick={handleReadClick}>
           {isRefetching ? (
             <RotateCwIcon className="mr-2 h-4 w-4 animate-spin" />
