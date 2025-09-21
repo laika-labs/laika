@@ -101,7 +101,7 @@ export function WriteMethod({
           </div>
         </form>
       </CardContent>
-      <CardFooter className="px-4 pb-4">
+      <CardFooter>
         <ConnectButton.Custom>
           {({ account, chain, openConnectModal, mounted }) => {
             const ready = mounted
