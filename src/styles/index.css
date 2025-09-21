@@ -118,4 +118,23 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  ::-webkit-scrollbar {
+    @apply w-3.5 h-1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply border-4 border-transparent border-solid rounded-full bg-secondary bg-clip-padding;
+  }
+}
+
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
