@@ -25,3 +25,6 @@ dist-ssr
 
 # Ignore TanStack Router temporary files
 .tanstack/tmp/
+
+# Claude Settings
+.claude/settings.local.json
