@@ -68,7 +68,7 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
   return (
     <Tabs defaultValue="object" className="flex h-full flex-col">
       <Card className="h-full w-full rounded-none">
-        <CardHeader className="flex-row justify-between px-4 pt-4 pb-0">
+        <CardHeader className="flex flex-row justify-between">
           <CardTitle>ABI</CardTitle>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -108,7 +108,7 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
             </DialogContent>
           </Dialog>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent>
           <TabsList className="flex h-auto w-fit gap-4 bg-transparent p-0">
             <TabsTrigger value="object" asChild>
               <TabsButton>Object</TabsButton>

@@ -64,10 +64,10 @@ export function ReadMethod({
 
   return (
     <Card className="w-full rounded-none">
-      <CardHeader className="px-4 pt-4 pb-0">
+      <CardHeader>
         <CardTitle>{functionName}</CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent>
         <form>
           <div className="grid w-full items-center gap-4">
             {abi &&

@@ -42,10 +42,10 @@ export function StateTab({ smartContract }: { smartContract: EVMContract }) {
 
   return (
     <Card className="w-full rounded-none">
-      <CardHeader className="px-4 pt-4 pb-0">
+      <CardHeader>
         <CardTitle>INFO</CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent>
         <Table>
           <TableCaption>Result has been pre-fetched.</TableCaption>
           <TableBody>
