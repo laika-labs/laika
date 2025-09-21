@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, RotateCwIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -7,7 +8,7 @@ import { isAddress, type Address } from 'viem'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -21,6 +22,149 @@ const formSchema = z.object({
     message: '(Invalid address)',
   }),
 })
+
+interface VirtualizedChainCommandProps {
+  chains: Array<{ name: string; chainId: number }>
+  selectedChain?: { name: string; chainId: number }
+  onSelectChain: (chain: { name: string; chainId: number }) => void
+}
+
+const VirtualizedChainCommand = ({ chains, selectedChain, onSelectChain }: VirtualizedChainCommandProps) => {
+  const [filteredChains, setFilteredChains] = useState(chains)
+  const [focusedIndex, setFocusedIndex] = useState(0)
+  const [isKeyboardNavActive, setIsKeyboardNavActive] = useState(false)
+
+  const parentRef = useRef(null)
+
+  const virtualizer = useVirtualizer({
+    count: filteredChains.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 35,
+  })
+
+  const virtualItems = virtualizer.getVirtualItems()
+
+  const scrollToIndex = (index: number) => {
+    virtualizer.scrollToIndex(index, {
+      align: 'center',
+    })
+  }
+
+  const handleSearch = (search: string) => {
+    setIsKeyboardNavActive(false)
+    setFilteredChains(chains.filter((chain) => chain.name.toLowerCase().includes(search.toLowerCase())))
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'ArrowDown': {
+        event.preventDefault()
+        setIsKeyboardNavActive(true)
+        setFocusedIndex((prev) => {
+          const newIndex = prev === -1 ? 0 : Math.min(prev + 1, filteredChains.length - 1)
+          scrollToIndex(newIndex)
+          return newIndex
+        })
+        break
+      }
+      case 'ArrowUp': {
+        event.preventDefault()
+        setIsKeyboardNavActive(true)
+        setFocusedIndex((prev) => {
+          const newIndex = prev === -1 ? filteredChains.length - 1 : Math.max(prev - 1, 0)
+          scrollToIndex(newIndex)
+          return newIndex
+        })
+        break
+      }
+      case 'Enter': {
+        event.preventDefault()
+        if (filteredChains[focusedIndex]) {
+          onSelectChain(filteredChains[focusedIndex])
+        }
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  useEffect(() => {
+    if (selectedChain) {
+      const index = filteredChains.findIndex((chain) => chain.chainId === selectedChain.chainId)
+      if (index !== -1) {
+        setFocusedIndex(index)
+        virtualizer.scrollToIndex(index, {
+          align: 'center',
+        })
+      }
+    }
+  }, [selectedChain, filteredChains, virtualizer])
+
+  useEffect(() => {
+    setFilteredChains(chains)
+  }, [chains])
+
+  return (
+    <Command shouldFilter={false} onKeyDown={handleKeyDown}>
+      <CommandInput onValueChange={handleSearch} placeholder="Search Networks..." className="h-9" />
+      <CommandList
+        ref={parentRef}
+        style={{
+          height: '256px',
+          width: '100%',
+          overflow: 'auto',
+        }}
+        onMouseDown={() => setIsKeyboardNavActive(false)}
+        onMouseMove={() => setIsKeyboardNavActive(false)}
+      >
+        <CommandEmpty>No chain found.</CommandEmpty>
+        <CommandGroup>
+          <div
+            style={{
+              height: `${virtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {virtualItems.map((virtualItem) => {
+              const chain = filteredChains[virtualItem.index]
+              return (
+                <CommandItem
+                  key={chain.chainId}
+                  disabled={isKeyboardNavActive}
+                  className={cn(
+                    'absolute top-0 left-0 w-full bg-transparent',
+                    focusedIndex === virtualItem.index && 'bg-accent text-accent-foreground',
+                    isKeyboardNavActive &&
+                      focusedIndex !== virtualItem.index &&
+                      'aria-selected:text-primary aria-selected:bg-transparent',
+                  )}
+                  style={{
+                    height: `${virtualItem.size}px`,
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
+                  value={chain.name}
+                  onMouseEnter={() => !isKeyboardNavActive && setFocusedIndex(virtualItem.index)}
+                  onMouseLeave={() => !isKeyboardNavActive && setFocusedIndex(-1)}
+                  onSelect={() => onSelectChain(chain)}
+                >
+                  {chain.name}
+                  <CheckIcon
+                    className={cn(
+                      'ml-auto h-4 w-4',
+                      selectedChain?.chainId === chain.chainId ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                </CommandItem>
+              )
+            })}
+          </div>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  )
+}
 
 interface ContractAddressProps {
   id: string
@@ -115,30 +259,14 @@ export function ContractAddress({ id, chainId, address }: ContractAddressProps) 
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[256px] p-0">
-              <Command>
-                <CommandInput placeholder="Search Networks..." className="h-9" />
-                <CommandEmpty>No chain found.</CommandEmpty>
-                <CommandGroup className="max-h-[256px] overflow-y-scroll">
-                  {chains.map((item) => (
-                    <CommandItem
-                      key={item.name}
-                      value={item.name}
-                      onSelect={(currentValue) => {
-                        const chain = chains.find((chain) => chain.name.toLowerCase() === currentValue.toLowerCase())
-                        if (chain) {
-                          updateContractChainId(id, chain.chainId)
-                        }
-                        setOpen(false)
-                      }}
-                    >
-                      {item.name}
-                      <CheckIcon
-                        className={cn('ml-auto h-4 w-4', chain?.name === item.name ? 'opacity-100' : 'opacity-0')}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
+              <VirtualizedChainCommand
+                chains={chains}
+                selectedChain={chain}
+                onSelectChain={(selectedChain) => {
+                  updateContractChainId(id, selectedChain.chainId)
+                  setOpen(false)
+                }}
+              />
             </PopoverContent>
           </Popover>
         </FormItem>
