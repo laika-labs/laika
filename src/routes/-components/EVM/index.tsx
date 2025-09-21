@@ -31,7 +31,7 @@ export function EVM() {
   const { data: chains } = useQuery({
     queryKey: ['chains'],
     queryFn: async (): Promise<EVMChain[]> => {
-      const res = await fetch('https://chainid.network/chains.json')
+      const res = await fetch('https://chainlist.org/rpcs.json')
       if (!res.ok) {
         throw new Error('Failed to fetch chains')
       }

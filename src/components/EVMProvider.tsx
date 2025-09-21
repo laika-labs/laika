@@ -31,13 +31,12 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
     }
 
     const rpcHTTP = chain.rpc
-      .filter((rpc) => rpc.startsWith('http') && !rpc.includes('API_KEY'))
-      .sort((a) => (a.includes('cloudflare') ? -1 : 1))
+      .filter((rpc) => rpc.url.startsWith('http') && !rpc.url.includes('API_KEY') && rpc.tracking === 'none')
+      .map((rpc) => rpc.url)
 
     return defineChain({
       id: chain.chainId,
       name: chain.name,
-      network: chain.shortName,
       nativeCurrency: chain.nativeCurrency,
       rpcUrls: {
         default: {

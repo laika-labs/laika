@@ -4,7 +4,7 @@ export interface EVMChain {
   name: string
   chain: string
   icon?: string
-  rpc: string[]
+  rpc: { url: string; tracking: string }[]
   features?: EVMFeature[]
   faucets: string[]
   nativeCurrency: EVMNativeCurrency
