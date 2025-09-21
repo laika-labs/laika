@@ -64,8 +64,8 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
                   <TabsTrigger
                     value="code"
                     className={cn(
-                      'h-9 flex-none px-0 py-0 data-[state=active]:shadow-none',
-                      open && 'data-[state=active]:text-primary',
+                      'h-9 flex-none px-0 py-0',
+                      open && 'data-[state=active]:text-primary dark:data-[state=active]:text-primary',
                     )}
                     onClick={handleToolbarOpen}
                     asChild
@@ -85,8 +85,8 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
                 <TabsTrigger
                   value="unit-converter"
                   className={cn(
-                    'h-9 flex-none px-0 py-0 data-[state=active]:shadow-none',
-                    open && 'data-[state=active]:text-primary',
+                    'h-9 flex-none px-0 py-0',
+                    open && 'data-[state=active]:text-primary dark:data-[state=active]:text-primary',
                   )}
                   onClick={handleToolbarOpen}
                   asChild

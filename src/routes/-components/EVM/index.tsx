@@ -63,7 +63,7 @@ export function EVM() {
                   <Tooltip>
                     <TabsTrigger
                       value="collections"
-                      className="data-[state=active]:text-primary h-9 flex-none px-0 py-0 data-[state=active]:shadow-none"
+                      className="data-[state=active]:text-primary dark:data-[state=active]:text-primary h-9 flex-none px-0 py-0"
                       asChild
                     >
                       <TooltipTrigger asChild>
@@ -79,7 +79,7 @@ export function EVM() {
                   <Tooltip>
                     <TabsTrigger
                       value="docs"
-                      className="data-[state=active]:text-primary h-9 flex-none px-0 py-0 data-[state=active]:shadow-none"
+                      className="data-[state=active]:text-primary dark:data-[state=active]:text-primary h-9 flex-none px-0 py-0"
                       asChild
                     >
                       <TooltipTrigger asChild>
