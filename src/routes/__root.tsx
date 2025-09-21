@@ -11,14 +11,16 @@ import { Header } from '@/components/Header'
 import { Sidenav } from '@/components/Sidenav'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
+import { useEagerMigrationCollections } from '@/hooks/useEagerMigrationCollections'
 
 const queryClient = new QueryClient()
 
 function RootLayout() {
+  useEagerMigrationCollections()
   return (
     <QueryClientProvider client={queryClient}>
-      <EVMProvider>
-        <ThemeProvider defaultTheme="system" storageKey="theme">
+      <ThemeProvider defaultTheme="system" storageKey="theme">
+        <EVMProvider>
           <Allotment className="!h-screen !w-screen" vertical>
             <Allotment.Pane minSize={24} maxSize={24} className="flex">
               <Announcement />
@@ -43,8 +45,8 @@ function RootLayout() {
           <Toaster />
           <ReactQueryDevtools />
           <TanStackRouterDevtools />
-        </ThemeProvider>
-      </EVMProvider>
+        </EVMProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }
