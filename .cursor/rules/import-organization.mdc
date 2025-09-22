@@ -1,0 +1,51 @@
+---
+description: Import organization and ordering rules for Laika project
+globs: ['src/**/*.ts', 'src/**/*.tsx']
+alwaysApply: true
+---
+
+# Laika Import Organization Rules
+
+## Import Order (Prettier Configured)
+
+Builtin Modules → React → Third-party → @/ paths → Relative imports
+
+## Example Structure
+
+```typescript
+// 1. Built-in modules (Node.js)
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
+// 2. React imports
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+
+// 3. Third-party libraries
+import { useQuery } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { parseAbi } from 'viem'
+import { useAccount, useConnect } from 'wagmi'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+// 4. Internal modules with @/ alias
+import { Button } from '@/components/ui/button'
+import { useEVMTabStore } from '@/store/tabs'
+import { cn } from '@/lib/utils'
+
+// 5. Relative imports
+import { LocalComponent } from './local-component'
+import './component.css'
+```
+
+## Guidelines
+
+- Prettier automatically sorts imports according to this exact order
+- Built-in Node.js modules come first (rarely used in frontend)
+- React imports are separated and come before other third-party modules
+- All third-party packages are grouped together (wagmi, viem, Zustand, TanStack, etc.)
+- Use `@/` path alias for all internal src directory imports
+- Relative imports come last (components, styles, assets)
+- Empty lines are automatically added between groups by Prettier
+- Public folder assets use absolute paths: `/laika-labs.svg` (these are relative imports)

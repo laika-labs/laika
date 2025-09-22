@@ -1,0 +1,124 @@
+---
+description: UI component conventions for Laika using shadcn/ui and Tailwind CSS v4
+globs: ["src/components/**/*.tsx", "src/**/*.tsx"]
+alwaysApply: true
+---
+
+# Laika UI Component Conventions
+
+## Component Preferences
+
+- Use shadcn/ui components when possible before creating custom ones
+- Follow "new-york" style preset for shadcn/ui
+- Component files use `.tsx` extension with TypeScript
+- Use PascalCase for component names and file names
+
+## Styling Guidelines
+
+- Tailwind CSS v4 for all styling
+- Use existing CSS variable system for theming
+- NO theme provider needed - project uses custom theme switching
+- Use Lucide React for all icons
+
+## Example Usage
+
+### Using shadcn/ui Components (Following Laika Patterns)
+
+```tsx
+import { MoonIcon, SunIcon } from 'lucide-react'
+
+import { useTheme } from '@/components/ThemeProvider'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+
+export function ThemeDropdown() {
+  const { setTheme } = useTheme()
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <SunIcon className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+```
+
+### Web3 Component Example
+
+```tsx
+import { useAccount, useConnect } from 'wagmi'
+
+import { Button } from '@/components/ui/button'
+import { useEVMTabStore } from '@/store/tabs'
+
+export function WalletConnect() {
+  const { address, isConnected } = useAccount()
+  const { connect, connectors } = useConnect()
+  const { addTab } = useEVMTabStore()
+
+  const handleConnect = () => {
+    if (!isConnected && connectors[0]) {
+      connect({ connector: connectors[0] })
+    }
+  }
+
+  if (isConnected) {
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-sm">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+        <Button size="sm" onClick={() => addTab('new-contract')}>
+          New Contract
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <Button onClick={handleConnect}>
+      Connect Wallet
+    </Button>
+  )
+}
+```
+
+## Laika-Specific Patterns
+
+### Theme Integration
+- Use `useTheme()` from `@/components/ThemeProvider`
+- Support light/dark/system themes
+- Use transition classes for smooth theme switching
+
+### Web3 Integration
+- Use wagmi hooks (`useAccount`, `useConnect`, `useReadContract`)
+- Use viem utilities (`parseAbi`, `formatEther`)
+- Handle wallet connection states properly
+
+### State Management
+- Use Zustand stores with persistence: `useEVMTabStore`, `useCollectionsStore`
+- Access store values via destructuring
+- Store files in `src/store/` directory
+
+## Icon Usage
+
+- Use Lucide React for all icons (`import { IconName } from 'lucide-react'`)
+- Standard sizing: `h-[1.2rem] w-[1.2rem]` or `size-4`
+- Add `sr-only` spans for accessibility
+- Use transition classes for animated icons
+
+## Code Style
+
+- Use single quotes for strings
+- No semicolons (following project's Prettier config)
+- Use `interface` over `type` for object shapes
+- Prefer `className` over `class`
+- Use Tailwind utility classes over custom CSS

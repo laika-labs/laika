@@ -1,0 +1,101 @@
+---
+description: Laika project structure and file organization conventions
+globs: ["src/**/*", "**/*.json", "**/*.md"]
+alwaysApply: true
+---
+
+# Laika Project Structure Conventions
+
+## Directory Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   └── *.tsx           # Custom components (PascalCase)
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions and helpers
+│   ├── utils.ts        # General utilities (cn, etc.)
+│   └── codegens/       # Code generation utilities
+├── routes/             # TanStack Router file-based routing
+│   ├── __root.tsx      # Root layout
+│   └── *.tsx           # Route components
+├── store/              # Zustand stores
+│   ├── tabs.ts         # Tab management
+│   ├── collections.ts  # Collections/contracts
+│   └── *.ts           # Other stores
+└── main.tsx           # App entry point
+```
+
+## File Naming Conventions
+
+- **Components**: PascalCase (e.g., `Header.tsx`, `ThemeDropdown.tsx`)
+- **Stores**: camelCase (e.g., `tabs.ts`, `collections.ts`)
+- **Routes**: TanStack Router conventions (`__root.tsx`, `index.tsx`)
+- **Hooks**: camelCase starting with `use` (e.g., `useContract.ts`)
+- **Utils**: camelCase (e.g., `utils.ts`, `constants.ts`)
+
+## Import Path Aliases
+
+Use `@/` for all internal imports:
+```typescript
+import { Button } from '@/components/ui/button'
+import { useEVMTabStore } from '@/store/tabs'
+import { cn } from '@/lib/utils'
+```
+
+## Asset Imports
+
+Assets from public folder use absolute paths:
+```typescript
+import laikaLogo from '/laika-labs.svg'
+import iconFile from '/icons/file.svg'
+```
+
+## Route Structure
+
+TanStack Router uses file-based routing:
+- `src/routes/__root.tsx` - Root layout with providers
+- `src/routes/index.tsx` - Home page
+- `src/routes/collections/index.tsx` - Collections page
+- Route components export using `createFileRoute`
+
+## Component Organization
+
+### UI Components (`src/components/ui/`)
+- shadcn/ui components
+- Generic, reusable components
+- Follow shadcn/ui naming and structure
+
+### Custom Components (`src/components/`)
+- App-specific components
+- Business logic components
+- Layout components (Header, Footer, Sidenav)
+
+### Providers
+- `EVMProvider.tsx` - Web3 and wallet connections
+- `ThemeProvider.tsx` - Theme management
+
+## Store Organization
+
+Each store should:
+- Have a clear, single responsibility
+- Use TypeScript interfaces
+- Include persistence when needed
+- Export a single hook (e.g., `useEVMTabStore`)
+
+## Development Commands
+
+Run these commands as specified in CLAUDE.md:
+- `bun run dev` - Development server
+- `bun run build` - Build for production
+- `bun run lint` - ESLint checking
+- `bun run format` - Prettier formatting
+
+## Code Style
+
+- Single quotes for strings
+- No semicolons (Prettier configured)
+- Trailing commas in multiline structures
+- 2-space indentation
+- Use `interface` over `type` for object shapes

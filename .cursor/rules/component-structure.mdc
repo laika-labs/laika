@@ -1,0 +1,58 @@
+---
+description: React component structure rules for Laika project
+globs: ["src/**/*.tsx", "src/**/*.ts", "src/components/**/*"]
+alwaysApply: true
+---
+
+# Laika Component Structure Rules
+
+## Organization
+1. State declarations at top (including Zustand stores)
+2. Web3 hooks (wagmi, viem)
+3. Event handlers after hooks
+4. Memoized values
+5. JSX at the end
+6. Keep components under 250 lines
+
+## Example Structure
+```tsx
+// 1. State declarations (React state + Zustand stores)
+const [loading, setLoading] = useState(false)
+const { tabs, activeTabId, addTab } = useEVMTabStore()
+
+// 2. Web3 hooks
+const { address, isConnected } = useAccount()
+const { connect } = useConnect()
+
+// 3. Event handlers
+const handleConnect = useCallback(() => {
+  if (!isConnected) {
+    connect()
+  }
+}, [isConnected, connect])
+
+const handleAddTab = useCallback((contractId: string) => {
+  addTab(contractId)
+}, [addTab])
+
+// 4. Memoized values
+const activeContract = useMemo(() => {
+  return tabs.find(tab => tab === activeTabId)
+}, [tabs, activeTabId])
+
+// 5. JSX
+return (
+  <div>
+    {/* Component JSX */}
+  </div>
+)
+```
+
+## Guidelines
+- Always follow this order for consistency
+- Use React.memo() for components that receive stable props
+- Implement proper dependency arrays in hooks
+- Break large components into smaller ones when approaching 250 lines
+- Group Web3 hooks together after state
+- Use Zustand stores for shared state across components
+- Prefer custom hooks for complex Web3 logic

@@ -1,0 +1,96 @@
+---
+description: TypeScript conventions for Laika project with Web3 and React patterns
+globs: ["src/**/*.ts", "src/**/*.tsx", "**/*.d.ts"]
+alwaysApply: true
+---
+
+# Laika TypeScript Conventions
+
+## Type Safety Rules
+- Do not use `any`, prefer `unknown`
+- Always consider strict mode
+- Use explicit return types for functions
+- Prefer `interface` over `type` for object shapes
+
+## Naming Conventions
+- PascalCase for types/interfaces/components
+- camelCase for variables/functions
+- String enums with initializers
+- Store names end with `Store` (e.g., `useEVMTabStore`)
+
+## Examples
+
+### Interface Definition
+```typescript
+interface UserProfile {
+  id: string
+  name: string
+  email: string
+  createdAt: Date
+}
+
+// Web3 specific interfaces
+interface ContractABI {
+  name: string
+  type: string
+  inputs: Array<{
+    name: string
+    type: string
+  }>
+}
+```
+
+### Function with Explicit Return Type
+```typescript
+const fetchContractData = async (address: string): Promise<ContractABI | null> => {
+  try {
+    const response = await fetch(`/api/contracts/${address}`)
+    const data = await response.json()
+    
+    return data
+  } catch (error) {
+    console.error('Error fetching contract:', error)
+    return null
+  }
+}
+```
+
+### String Enum
+```typescript
+enum ContractMethodType {
+  READ = 'read',
+  WRITE = 'write',
+  PAYABLE = 'payable',
+  VIEW = 'view'
+}
+```
+
+### Using Unknown Instead of Any
+```typescript
+// ❌ Avoid
+const parseABI = (data: any) => {
+  return data.abi
+}
+
+// ✅ Preferred
+const parseABI = (data: unknown): ContractABI[] | null => {
+  if (typeof data === 'object' && data !== null && 'abi' in data) {
+    return data.abi as ContractABI[]
+  }
+  return null
+}
+```
+
+## Zustand Store Patterns
+
+```typescript
+interface TabStore {
+  tabs: string[]
+  activeTabId: string | null
+  addTab: (id: string) => void
+  removeTab: (id: string) => void
+  setActiveTab: (id: string) => void
+}
+
+export const useTabStore = create<TabStore>()()
+```
