@@ -56,20 +56,23 @@ All state is managed through Zustand stores with persistence:
 
 #### Component Structure
 
-1. State declarations at top
-2. Event handlers after state
-3. Memoize properly
-4. JSX at the end
-5. Keep components under 250 lines
+1. State declarations at top (React state + Zustand stores)
+2. Web3 hooks (wagmi, viem) after state
+3. Event handlers after hooks
+4. Memoized values
+5. JSX at the end
+6. Keep components under 250 lines
 
 #### TypeScript Conventions
 
 - Do not use `any`, prefer `unknown`
 - Always consider strict mode
-- Use explicit return types
-- PascalCase for types/interfaces
+- Use explicit return types for functions
+- Prefer `interface` over `type` for object shapes
+- PascalCase for types/interfaces/components
 - camelCase for variables/functions
 - String enums with initializers
+- Store names end with `Store` (e.g., `useEVMTabStore`)
 
 ### UI Layout Structure
 
@@ -103,3 +106,5 @@ The `src/lib/codegens/` directory contains code generators for:
 - Components follow shadcn/ui patterns with Tailwind CSS
 - EVMProvider wraps wagmi for Web3 functionality
 - Monaco Editor is used for ABI display and code editing
+- Husky runs lint-staged on pre-commit
+- Import order: Built-in → React → Third-party → @/ paths → Relative imports
