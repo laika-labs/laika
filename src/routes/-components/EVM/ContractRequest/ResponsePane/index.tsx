@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { useResponseStore } from '@/store/responses'
 
@@ -6,6 +8,15 @@ import { WriteResponse } from './WriteResponse'
 
 export function ResponsePane() {
   const { responses, clearResponses } = useResponseStore()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const prevResponsesLengthRef = useRef(responses.length)
+
+  useEffect(() => {
+    if (responses.length > prevResponsesLengthRef.current && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
+    }
+    prevResponsesLengthRef.current = responses.length
+  }, [responses])
 
   return (
     <div className="flex h-full flex-col rounded-lg p-4 font-mono text-sm">
@@ -15,7 +26,7 @@ export function ResponsePane() {
           Clear
         </Button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div ref={scrollContainerRef} className="min-h-0 flex-1 overflow-y-auto">
         {responses.length === 0 && <div className="text-center text-gray-500">No responses to display.</div>}
         {responses.map((response, index) => {
           if (response.type === 'READ') {
