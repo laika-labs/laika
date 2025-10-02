@@ -50,8 +50,8 @@ export function ContractRequest() {
               <span
                 className={cn(
                   buttonVariants({ size: 'icon' }),
-                  'text-secondary-foreground bg-background hover:bg-muted hidden group-hover:block focus-visible:ring-0',
-                  isActive && 'bg-muted hover:bg-background block',
+                  'text-secondary-foreground bg-background hover:bg-muted hidden group-hover:flex focus-visible:ring-0',
+                  isActive && 'bg-muted hover:bg-background flex',
                 )}
                 onClick={(e) => {
                   e.stopPropagation()
