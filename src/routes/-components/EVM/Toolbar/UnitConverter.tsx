@@ -58,7 +58,7 @@ export function UnitConverter({ handleClose }: UnitConverterProps) {
       <div className="flex items-center justify-between p-2">
         <small className="text-sm leading-none font-medium">Unit Converter</small>
         <Button variant="secondary" size="icon" onClick={handleClose}>
-          <X className="h-4 w-4" />
+          <X />
         </Button>
       </div>
       <div className="flex flex-col gap-2 p-2">
@@ -69,7 +69,7 @@ export function UnitConverter({ handleClose }: UnitConverterProps) {
               size="icon"
               onClick={handleCopy(formatUnits(parseUnits(value, unit), item.unit), index)}
             >
-              {index === copyIndex ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {index === copyIndex ? <Check /> : <Copy />}
             </Button>
             <Input
               type="number"
