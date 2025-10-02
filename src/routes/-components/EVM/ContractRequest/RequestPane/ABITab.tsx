@@ -23,7 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useEVMCollectionStore, type EVMContract } from '@/store/collections'
 
-import { TabsButton } from '../TabsButton'
+import { TabsButton } from './TabsButton'
 
 const FormSchema = z.object({
   abi: z.string(),

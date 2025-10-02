@@ -49,8 +49,8 @@ export function ContractRequest() {
               <small className="w-44 truncate py-2 text-left text-sm leading-none font-medium">{name}</small>
               <span
                 className={cn(
-                  buttonVariants(),
-                  'text-secondary-foreground bg-background hover:bg-muted hidden h-8 w-8 p-2 group-hover:block focus-visible:ring-0',
+                  buttonVariants({ size: 'icon' }),
+                  'text-secondary-foreground bg-background hover:bg-muted hidden group-hover:block focus-visible:ring-0',
                   isActive && 'bg-muted hover:bg-background block',
                 )}
                 onClick={(e) => {
@@ -58,7 +58,7 @@ export function ContractRequest() {
                   removeTab(tab)
                 }}
               >
-                <X className="h-4 w-4" />
+                <X />
               </span>
             </Button>
           )
