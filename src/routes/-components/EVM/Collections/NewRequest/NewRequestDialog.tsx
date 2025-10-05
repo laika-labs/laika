@@ -304,7 +304,7 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
                 <FormItem>
                   <FormLabel>ABI (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Paste your ABI here." rows={10} {...field} />
+                    <Textarea placeholder="Paste your ABI here." className="h-[240px] overflow-y-auto" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

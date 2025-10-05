@@ -89,7 +89,11 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
                       <FormItem>
                         <FormLabel>ABI</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Paste your ABI here." rows={10} {...field} />
+                          <Textarea
+                            placeholder="Paste your ABI here."
+                            className="h-[240px] overflow-y-auto"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
