@@ -75,12 +75,11 @@ export function WriteMethod({
       <CardHeader>
         <CardTitle>{functionName}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            {abi &&
-              abi.inputs &&
-              abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
+      {abi && abi.inputs && abi.inputs.length > 0 && (
+        <CardContent>
+          <form>
+            <div className="grid w-full items-center gap-4">
+              {abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
                 const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   const newArgs = [...args]
                   newArgs[idx] = event.target.value
@@ -98,9 +97,10 @@ export function WriteMethod({
                   </div>
                 )
               })}
-          </div>
-        </form>
-      </CardContent>
+            </div>
+          </form>
+        </CardContent>
+      )}
       <CardFooter>
         <ConnectButton.Custom>
           {({ account, chain, openConnectModal, mounted }) => {
