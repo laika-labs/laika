@@ -11,12 +11,10 @@ import { Header } from '@/components/Header'
 import { Sidenav } from '@/components/Sidenav'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
-import { useEagerMigrationCollections } from '@/hooks/useEagerMigrationCollections'
 
 const queryClient = new QueryClient()
 
 function RootLayout() {
-  useEagerMigrationCollections()
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="theme">
