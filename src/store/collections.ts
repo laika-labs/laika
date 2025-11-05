@@ -68,7 +68,26 @@ export interface EVMCollectionStore {
   removeItem: (id: string) => void
 }
 
-const collections: EVMCollection[] = []
+const collections: EVMCollection[] = [
+  {
+    id: uuidv4(),
+    name: 'Example Contracts (Sepolia)',
+    type: EVMItemType.Collection,
+    isOpen: true,
+    items: [
+      {
+        id: uuidv4(),
+        name: 'LaikaTestingContract',
+        type: EVMItemType.SmartContract,
+        chainId: 11155111,
+        contract: {
+          address: '0xbB39Cb0a1B8B95cbB1Ae7681507e420CF7307396',
+          abi: '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[],"name":"Increment","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"","type":"uint256"}],"name":"Reset","type":"event"},{"inputs":[],"name":"count","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getCountDetail","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"increment","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"lastUpdate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"_name","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"uint256","name":"_count","type":"uint256"}],"name":"reset","outputs":[],"stateMutability":"payable","type":"function"}]',
+        },
+      },
+    ],
+  },
+]
 
 export const useEVMCollectionStore = create<EVMCollectionStore>()(
   persist(
