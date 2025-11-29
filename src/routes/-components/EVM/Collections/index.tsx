@@ -22,7 +22,7 @@ export function Collections() {
   }
 
   return (
-    <Allotment className="h-full w-full" vertical>
+    <Allotment defaultSizes={[48, 36, 99999]} className="h-full w-full" vertical>
       <Allotment.Pane minSize={48} maxSize={48}>
         <div className="flex items-center justify-between p-2">
           <small className="text-sm leading-none font-medium">Collections</small>

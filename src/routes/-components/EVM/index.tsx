@@ -54,9 +54,9 @@ export function EVM() {
 
   return (
     <Tabs defaultValue="collections" orientation="vertical" className="size-full">
-      <Allotment proportionalLayout={false}>
+      <Allotment defaultSizes={[320]} proportionalLayout={false}>
         <Allotment.Pane minSize={256} maxSize={376} preferredSize={320} priority={LayoutPriority.High} snap>
-          <Allotment>
+          <Allotment defaultSizes={[48, 99999]}>
             <Allotment.Pane minSize={48} maxSize={48}>
               <TooltipProvider>
                 <TabsList className="gap-2 bg-inherit p-1.5">
@@ -107,7 +107,12 @@ export function EVM() {
         </Allotment.Pane>
         <Allotment.Pane priority={LayoutPriority.Low}>
           <TabsContent value="collections" className="m-0 size-full">
-            <Allotment ref={toolbarRef} onChange={handleToolbarChange} proportionalLayout={false}>
+            <Allotment
+              defaultSizes={[99999, 48]}
+              ref={toolbarRef}
+              onChange={handleToolbarChange}
+              proportionalLayout={false}
+            >
               <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
               <Allotment.Pane minSize={48} maxSize={448} preferredSize={48} priority={LayoutPriority.Low}>
                 <Toolbar toolbarRef={toolbarRef} />

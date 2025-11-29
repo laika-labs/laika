@@ -6,8 +6,8 @@ import TagManager from 'react-gtm-module'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-import '@/styles/index.css'
 import 'allotment/dist/style.css'
+import '@/styles/index.css'
 import '@rainbow-me/rainbowkit/styles.css'
 
 // Create a new router instance

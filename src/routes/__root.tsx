@@ -19,7 +19,7 @@ function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="theme">
         <EVMProvider>
-          <Allotment className="!h-screen !w-screen" vertical>
+          <Allotment defaultSizes={[24, 48, 99999, 32]} vertical>
             <Allotment.Pane minSize={24} maxSize={24} className="flex">
               <Announcement />
             </Allotment.Pane>
@@ -27,7 +27,7 @@ function RootLayout() {
               <Header />
             </Allotment.Pane>
             <Allotment.Pane>
-              <Allotment defaultSizes={[80, 80]}>
+              <Allotment defaultSizes={[80, 99999]}>
                 <Allotment.Pane minSize={80} maxSize={80}>
                   <Sidenav />
                 </Allotment.Pane>

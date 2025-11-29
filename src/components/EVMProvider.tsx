@@ -72,7 +72,9 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
 
   return (
     <WagmiProvider config={wagmiConfig}>
-      <RainbowKitProvider theme={resolvedRainbowKitTheme}>{children}</RainbowKitProvider>
+      <RainbowKitProvider id="rainbowkit" theme={resolvedRainbowKitTheme}>
+        {children}
+      </RainbowKitProvider>
     </WagmiProvider>
   )
 }

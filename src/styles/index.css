@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -74,6 +74,8 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.637 0.237 25.331);
+
+  --focus-border: var(--primary);
 }
 
 .dark {
@@ -110,7 +112,6 @@
   --sidebar-ring: oklch(0.637 0.237 25.331);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -118,19 +119,23 @@
   body {
     @apply bg-background text-foreground;
   }
-  button, [role="button"] {
+  button,
+  [role='button'] {
     cursor: pointer;
   }
-  
+
   ::-webkit-scrollbar {
-    @apply w-3.5 h-1;
+    @apply h-1 w-3.5;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary rounded-full border-4 border-solid border-transparent bg-clip-padding;
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply border-4 border-transparent border-solid rounded-full bg-secondary bg-clip-padding;
+  #root,
+  div[data-rk='rainbowkit'] {
+    @apply h-screen w-screen;
   }
 }
-
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
