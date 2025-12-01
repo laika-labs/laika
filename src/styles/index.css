@@ -117,7 +117,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground h-screen w-screen;
   }
   button,
   [role='button'] {
@@ -131,8 +131,7 @@
     @apply bg-secondary rounded-full border-4 border-solid border-transparent bg-clip-padding;
   }
 
-  #root,
-  div[data-rk='rainbowkit'] {
+  #root {
     @apply h-screen w-screen;
   }
 }
