@@ -76,7 +76,7 @@ export function Folder({ folder, level = 0, search }: CollectionProps) {
     <div className="flex flex-col">
       <div className="hover:bg-muted/60 flex">
         {times(level, (index) => (
-          <div key={index} className="bg-muted-foreground/30 ml-4 w-0.5"></div>
+          <div key={index} className="bg-muted-foreground/30 ml-4 w-0.5" />
         ))}
         <div className="flex flex-1 truncate px-2">
           <div
@@ -94,7 +94,7 @@ export function Folder({ folder, level = 0, search }: CollectionProps) {
           </div>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0">
+              <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
                 <MoreHorizontalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

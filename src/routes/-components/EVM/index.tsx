@@ -67,7 +67,7 @@ export function EVM() {
                       asChild
                     >
                       <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label="Collections">
                           <FoldersIcon />
                         </Button>
                       </TooltipTrigger>
@@ -83,7 +83,7 @@ export function EVM() {
                       asChild
                     >
                       <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label="Documentation">
                           <BookTextIcon />
                         </Button>
                       </TooltipTrigger>

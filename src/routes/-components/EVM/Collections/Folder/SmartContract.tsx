@@ -77,7 +77,7 @@ export function SmartContract({ smartContract, level, search }: SmartContractPro
         </div>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0">
+            <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

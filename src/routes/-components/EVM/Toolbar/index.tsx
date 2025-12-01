@@ -71,7 +71,7 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
                     asChild
                   >
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" aria-label="Code Snippet">
                         <Code2 />
                       </Button>
                     </TooltipTrigger>
@@ -92,7 +92,7 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
                   asChild
                 >
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" aria-label="Unit Converter">
                       <ArrowRightLeft />
                     </Button>
                   </TooltipTrigger>
