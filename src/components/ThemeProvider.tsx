@@ -36,6 +36,16 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement
+    const css = window.document.createElement('style')
+
+    css.textContent = `* {
+      -webkit-transition: none !important;
+      -moz-transition: none !important;
+      -o-transition: none !important;
+      -ms-transition: none !important;
+      transition: none !important;
+    }`
+    window.document.head.appendChild(css)
 
     root.classList.remove('light', 'dark')
 
@@ -47,6 +57,7 @@ export function ThemeProvider({
     }
 
     root.classList.add(theme)
+    window.document.head.removeChild(css)
   }, [theme])
 
   const value = {
