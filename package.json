@@ -83,6 +83,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.49.0",
     "vite": "npm:rolldown-vite@latest",
+    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-svgr": "^4.5.0"
   }
 }
