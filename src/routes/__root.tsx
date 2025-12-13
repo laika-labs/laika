@@ -5,7 +5,6 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Allotment } from 'allotment'
 
 import { Announcement } from '@/components/Announcement'
-import { EVMProvider } from '@/components/EVMProvider'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { Sidenav } from '@/components/Sidenav'
@@ -18,32 +17,30 @@ function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="theme">
-        <EVMProvider>
-          <Allotment defaultSizes={[24, 48, 99999, 32]} className="h-screen! w-screen!" vertical>
-            <Allotment.Pane minSize={24} maxSize={24} className="flex">
-              <Announcement />
-            </Allotment.Pane>
-            <Allotment.Pane minSize={48} maxSize={48} className="flex">
-              <Header />
-            </Allotment.Pane>
-            <Allotment.Pane>
-              <Allotment defaultSizes={[80, 99999]}>
-                <Allotment.Pane minSize={80} maxSize={80}>
-                  <Sidenav />
-                </Allotment.Pane>
-                <Allotment.Pane>
-                  <Outlet />
-                </Allotment.Pane>
-              </Allotment>
-            </Allotment.Pane>
-            <Allotment.Pane minSize={32} maxSize={32} className="flex">
-              <Footer />
-            </Allotment.Pane>
-          </Allotment>
-          <Toaster />
-          <ReactQueryDevtools />
-          <TanStackRouterDevtools />
-        </EVMProvider>
+        <Allotment defaultSizes={[24, 48, 99999, 32]} className="h-dvh! w-dvw!" vertical>
+          <Allotment.Pane minSize={24} maxSize={24} className="flex">
+            <Announcement />
+          </Allotment.Pane>
+          <Allotment.Pane minSize={48} maxSize={48} className="flex">
+            <Header />
+          </Allotment.Pane>
+          <Allotment.Pane>
+            <Allotment defaultSizes={[80, 99999]}>
+              <Allotment.Pane minSize={80} maxSize={80}>
+                <Sidenav />
+              </Allotment.Pane>
+              <Allotment.Pane className="[&_div[data-rk='rainbowkit']]:size-full">
+                <Outlet />
+              </Allotment.Pane>
+            </Allotment>
+          </Allotment.Pane>
+          <Allotment.Pane minSize={32} maxSize={32} className="flex">
+            <Footer />
+          </Allotment.Pane>
+        </Allotment>
+        <Toaster />
+        <ReactQueryDevtools />
+        <TanStackRouterDevtools />
       </ThemeProvider>
     </QueryClientProvider>
   )

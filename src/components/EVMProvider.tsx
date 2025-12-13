@@ -63,10 +63,11 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
   })
 
   const resolvedRainbowKitTheme = useMemo(() => {
+    const options = { borderRadius: 'small' } as const
     if (resolvedTheme === 'dark') {
-      return darkTheme()
+      return darkTheme(options)
     } else {
-      return lightTheme()
+      return lightTheme(options)
     }
   }, [resolvedTheme])
 
