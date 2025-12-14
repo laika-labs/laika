@@ -12,13 +12,23 @@ import { useEVMTabStore } from '@/store/tabs'
 import { useTheme } from './ThemeProvider'
 
 export function EVMProvider({ children }: React.PropsWithChildren) {
-  const { collections } = useEVMCollectionStore()
+  const { collections, temporaryContracts } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
   const { chains: chainList } = useEVMChainsStore()
 
   const { resolvedTheme } = useTheme()
 
-  const smartContract = findItemInCollections(collections, activeTabId as string) as EVMContract
+  const smartContract = useMemo(() => {
+    if (!activeTabId) return undefined
+
+    // Check temporary contracts first
+    if (temporaryContracts[activeTabId]) {
+      return temporaryContracts[activeTabId]
+    }
+
+    // Then check in collections
+    return findItemInCollections(collections, activeTabId) as EVMContract
+  }, [collections, temporaryContracts, activeTabId])
 
   const definedChain = useMemo(() => {
     if (!activeTabId) {

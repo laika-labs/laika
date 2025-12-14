@@ -22,19 +22,27 @@ export function CodeSnippet({ handleClose }: CodeSnippetProps) {
 
   const { resolvedTheme } = useTheme()
 
-  const { collections } = useEVMCollectionStore()
+  const { collections, temporaryContracts } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
-    return findItemInCollections(collections, activeTabId as string) as EVMContract
-  }, [activeTabId, collections])
+    if (!activeTabId) return undefined
+
+    // Check temporary contracts first
+    if (temporaryContracts[activeTabId]) {
+      return temporaryContracts[activeTabId]
+    }
+
+    // Then check in collections
+    return findItemInCollections(collections, activeTabId) as EVMContract
+  }, [activeTabId, collections, temporaryContracts])
 
   const codegen = useMemo(() => {
     return codegens.find((codegen) => codegen.name.toLowerCase() === value.toLowerCase())
   }, [value])
 
   const code = useMemo(() => {
-    if (codegen) {
+    if (codegen && smartContract) {
       return codegen.generate(smartContract)
     }
     return ''
