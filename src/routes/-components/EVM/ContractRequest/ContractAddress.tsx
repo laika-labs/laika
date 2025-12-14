@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, RotateCwIcon } from 'lucide-react'
+import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, RotateCwIcon, SaveIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { isAddress, type Address } from 'viem'
@@ -16,6 +16,8 @@ import { getabi } from '@/constants/api'
 import { cn } from '@/lib/utils'
 import { useEVMChainsStore } from '@/store/chains'
 import { useEVMCollectionStore } from '@/store/collections'
+
+import { SaveContractDialog } from './SaveContractDialog'
 
 const formSchema = z.object({
   address: z.string().refine(isAddress, {
@@ -175,9 +177,13 @@ interface ContractAddressProps {
 export function ContractAddress({ id, chainId, address }: ContractAddressProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false)
 
-  const { updateContractChainId, updateContractAddress, updateContractABI } = useEVMCollectionStore()
+  const { updateContractChainId, updateContractAddress, updateContractABI, temporaryContracts } =
+    useEVMCollectionStore()
   const { chains } = useEVMChainsStore()
+
+  const isTemporary = temporaryContracts[id] !== undefined
 
   const chain = useMemo(() => {
     return chains.find((chain) => chain.chainId === chainId)
@@ -293,15 +299,23 @@ export function ContractAddress({ id, chainId, address }: ContractAddressProps) 
             onClick={handleLoadContract}
             disabled={loading}
           >
-            {loading ? (
-              <RotateCwIcon className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <DownloadIcon className="mr-2 h-4 w-4" />
-            )}
+            {loading ? <RotateCwIcon className="animate-spin" /> : <DownloadIcon />}
             Load Contract
           </Button>
         )}
+        {isTemporary && (
+          <Button
+            variant="secondary"
+            className="whitespace-nowrap"
+            type="button"
+            onClick={() => setSaveDialogOpen(true)}
+          >
+            <SaveIcon />
+            Save
+          </Button>
+        )}
       </form>
+      <SaveContractDialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen} contractId={id} />
     </Form>
   )
 }

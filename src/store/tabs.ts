@@ -8,6 +8,7 @@ export const useEVMTabStore = create<{
   removeTab: (id: string) => void
   clearTabs: () => void
   setActiveTab: (id: string) => void
+  replaceTab: (oldId: string, newId: string) => void
 }>()(
   persist(
     (set) => ({
@@ -34,7 +35,26 @@ export const useEVMTabStore = create<{
           }
         }),
       clearTabs: () => set({ tabs: [], activeTabId: null }),
-      setActiveTab: (id: string) => set({ activeTabId: id }),
+      setActiveTab: (id: string) =>
+        set((state) => {
+          if (state.tabs.includes(id)) {
+            return { activeTabId: id }
+          }
+          return state
+        }),
+      replaceTab: (oldId: string, newId: string) =>
+        set((state) => {
+          const index = state.tabs.indexOf(oldId)
+          if (index === -1) {
+            return state
+          }
+          const tabs = [...state.tabs]
+          tabs[index] = newId
+          return {
+            tabs,
+            activeTabId: state.activeTabId === oldId ? newId : state.activeTabId,
+          }
+        }),
     }),
     {
       name: 'evmTabs',

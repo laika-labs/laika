@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { findItemInCollections } from '@/lib/collections'
-import { useEVMCollectionStore, type EVMContract } from '@/store/collections'
+import { useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 
 import { ABITab } from './ABITab'
@@ -12,12 +12,20 @@ import { TabsButton } from './TabsButton'
 import { WriteTab } from './WriteTab'
 
 export function RequestPane() {
-  const { collections } = useEVMCollectionStore()
+  const { collections, temporaryContracts } = useEVMCollectionStore()
   const { activeTabId } = useEVMTabStore()
 
   const smartContract = useMemo(() => {
-    return findItemInCollections(collections, activeTabId as string) as EVMContract
-  }, [activeTabId, collections])
+    if (!activeTabId) return null
+    const temp = temporaryContracts[activeTabId]
+    if (temp) return temp
+    const permanent = findItemInCollections(collections, activeTabId)
+    return permanent?.type === 'smart-contract' ? permanent : null
+  }, [activeTabId, collections, temporaryContracts])
+
+  if (!smartContract) {
+    return null
+  }
 
   return (
     <Tabs defaultValue="state" className="flex h-full flex-col">

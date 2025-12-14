@@ -10,14 +10,22 @@ import { Header } from '@/components/Header'
 import { Sidenav } from '@/components/Sidenav'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 const queryClient = new QueryClient()
 
 function RootLayout() {
+  const isLaptop = useMediaQuery('(min-width: 1024px)')
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="theme">
-        <Allotment defaultSizes={[24, 48, 99999, 32]} className="h-dvh! w-dvw!" vertical>
+        <Allotment
+          key={isLaptop ? 'laptop' : 'mobile'}
+          defaultSizes={[24, 48, 99999, 32]}
+          className="h-dvh! w-dvw!"
+          vertical
+        >
           <Allotment.Pane minSize={24} maxSize={24} className="flex">
             <Announcement />
           </Allotment.Pane>
@@ -25,16 +33,23 @@ function RootLayout() {
             <Header />
           </Allotment.Pane>
           <Allotment.Pane>
-            <Allotment defaultSizes={[80, 99999]}>
-              <Allotment.Pane minSize={80} maxSize={80}>
-                <Sidenav />
-              </Allotment.Pane>
+            <Allotment defaultSizes={[80, 99999]} vertical={!isLaptop}>
+              {isLaptop && (
+                <Allotment.Pane minSize={80} maxSize={80}>
+                  <Sidenav />
+                </Allotment.Pane>
+              )}
               <Allotment.Pane className="[&_div[data-rk='rainbowkit']]:size-full">
                 <Outlet />
               </Allotment.Pane>
+              {!isLaptop && (
+                <Allotment.Pane minSize={80} maxSize={80}>
+                  <Sidenav />
+                </Allotment.Pane>
+              )}
             </Allotment>
           </Allotment.Pane>
-          <Allotment.Pane minSize={32} maxSize={32} className="flex">
+          <Allotment.Pane minSize={32} maxSize={32} className="flex" visible={isLaptop}>
             <Footer />
           </Allotment.Pane>
         </Allotment>

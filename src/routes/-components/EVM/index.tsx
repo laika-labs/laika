@@ -1,13 +1,17 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Allotment, LayoutPriority, type AllotmentHandle } from 'allotment'
-import { BookTextIcon, FoldersIcon } from 'lucide-react'
+import { BookTextIcon, FoldersIcon, PlusIcon, XIcon } from 'lucide-react'
 
 import { EVMProvider } from '@/components/EVMProvider'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { findItemInCollections } from '@/lib/collections'
+import { cn } from '@/lib/utils'
 import { useEVMChainsStore, type EVMChain } from '@/store/chains'
+import { useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 
 import { Collections } from './Collections'
@@ -20,8 +24,16 @@ import { Welcome } from './Welcome'
 export function EVM() {
   const toolbarRef = useRef<AllotmentHandle>(null)
 
-  const { tabs } = useEVMTabStore()
+  const { collections, temporaryContracts, addTemporaryContract } = useEVMCollectionStore()
+  const { tabs, activeTabId, setActiveTab, removeTab, clearTabs, addTab } = useEVMTabStore()
   const { setChains } = useEVMChainsStore()
+
+  const isLaptop = useMediaQuery('(min-width: 1024px)')
+
+  const handleAddTemporaryContract = () => {
+    const id = addTemporaryContract()
+    addTab(id)
+  }
 
   const handleToolbarChange = (sizes: number[]) => {
     if (sizes?.[1] > 48 && sizes?.[1] < 384) {
@@ -42,7 +54,7 @@ export function EVM() {
     gcTime: 1000 * 60 * 60 * 24,
   })
 
-  useMemo(() => {
+  useEffect(() => {
     if (chains) {
       setChains(chains)
     }
@@ -57,7 +69,14 @@ export function EVM() {
     <EVMProvider>
       <Tabs defaultValue="collections" orientation="vertical" className="size-full">
         <Allotment defaultSizes={[320]} proportionalLayout={false}>
-          <Allotment.Pane minSize={256} maxSize={376} preferredSize={320} priority={LayoutPriority.High} snap>
+          <Allotment.Pane
+            minSize={256}
+            maxSize={376}
+            preferredSize={320}
+            priority={LayoutPriority.High}
+            visible={isLaptop}
+            snap
+          >
             <Allotment defaultSizes={[48, 99999]}>
               <Allotment.Pane minSize={48} maxSize={48}>
                 <TooltipProvider>
@@ -115,8 +134,71 @@ export function EVM() {
                 onChange={handleToolbarChange}
                 proportionalLayout={false}
               >
-                <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
-                <Allotment.Pane minSize={48} maxSize={448} preferredSize={48} priority={LayoutPriority.Low}>
+                <Allotment.Pane priority={LayoutPriority.High}>
+                  <Allotment defaultSizes={[48, 99999]} proportionalLayout={false} vertical>
+                    <Allotment.Pane
+                      minSize={48}
+                      maxSize={48}
+                      priority={LayoutPriority.Low}
+                      className="no-scrollbar flex overflow-x-scroll!"
+                    >
+                      {tabs.map((tab) => {
+                        const found = findItemInCollections(collections, tab) || temporaryContracts[tab]
+                        if (found === undefined) {
+                          removeTab(tab)
+                          return null
+                        }
+
+                        const name = found?.name
+                        const isActive = activeTabId === tab
+
+                        return (
+                          <Button
+                            key={tab}
+                            className={cn(
+                              'text-secondary-foreground bg-background hover:bg-background group h-auto w-52 justify-between rounded-none border-r',
+                              isActive && 'bg-muted hover:bg-muted',
+                            )}
+                            onClick={() => setActiveTab(tab)}
+                          >
+                            <small className="w-44 truncate py-2 text-left text-sm leading-none font-medium">
+                              {name}
+                            </small>
+                            <span
+                              className={cn(
+                                buttonVariants({ size: 'icon' }),
+                                'text-secondary-foreground bg-background hover:bg-muted hidden group-hover:flex focus-visible:ring-0',
+                                isActive && 'bg-muted hover:bg-background flex',
+                              )}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeTab(tab)
+                              }}
+                            >
+                              <XIcon />
+                            </span>
+                          </Button>
+                        )
+                      })}
+                      <Button variant="ghost" className="h-auto w-12 rounded-none" onClick={handleAddTemporaryContract}>
+                        <PlusIcon />
+                      </Button>
+                      {activeTabId !== null && (
+                        <Button variant="ghost" className="h-auto rounded-none" onClick={clearTabs}>
+                          <small className="truncate py-2 text-sm leading-none font-medium">Close All Tabs</small>
+                        </Button>
+                      )}
+                    </Allotment.Pane>
+                    <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
+                  </Allotment>
+                </Allotment.Pane>
+                <Allotment.Pane
+                  minSize={48}
+                  maxSize={448}
+                  preferredSize={48}
+                  priority={LayoutPriority.Low}
+                  visible={isLaptop}
+                >
                   <Toolbar toolbarRef={toolbarRef} />
                 </Allotment.Pane>
               </Allotment>
