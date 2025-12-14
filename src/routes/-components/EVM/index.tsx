@@ -24,7 +24,7 @@ import { Welcome } from './Welcome'
 export function EVM() {
   const toolbarRef = useRef<AllotmentHandle>(null)
 
-  const { collections, temporaryContracts, addTemporaryContract } = useEVMCollectionStore()
+  const { collections, temporaryContracts, addTemporaryContract, removeTemporaryContract } = useEVMCollectionStore()
   const { tabs, activeTabId, setActiveTab, removeTab, clearTabs, addTab } = useEVMTabStore()
   const { setChains } = useEVMChainsStore()
 
@@ -33,6 +33,24 @@ export function EVM() {
   const handleAddTemporaryContract = () => {
     const id = addTemporaryContract()
     addTab(id)
+  }
+
+  const handleRemoveTab = (tabId: string) => {
+    // Clean up temporary contract if it exists
+    if (temporaryContracts[tabId]) {
+      removeTemporaryContract(tabId)
+    }
+    removeTab(tabId)
+  }
+
+  const handleClearAllTabs = () => {
+    // Clean up all temporary contracts before clearing tabs
+    tabs.forEach((tabId) => {
+      if (temporaryContracts[tabId]) {
+        removeTemporaryContract(tabId)
+      }
+    })
+    clearTabs()
   }
 
   const handleToolbarChange = (sizes: number[]) => {
@@ -172,7 +190,7 @@ export function EVM() {
                               )}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                removeTab(tab)
+                                handleRemoveTab(tab)
                               }}
                             >
                               <XIcon />
@@ -184,7 +202,7 @@ export function EVM() {
                         <PlusIcon />
                       </Button>
                       {activeTabId !== null && (
-                        <Button variant="ghost" className="h-auto rounded-none" onClick={clearTabs}>
+                        <Button variant="ghost" className="h-auto rounded-none" onClick={handleClearAllTabs}>
                           <small className="truncate py-2 text-sm leading-none font-medium">Close All Tabs</small>
                         </Button>
                       )}
