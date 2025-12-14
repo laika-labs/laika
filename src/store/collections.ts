@@ -14,7 +14,6 @@ export interface EVMContract {
   id: string
   name: string
   type: typeof EVMItemType.SmartContract
-  temporary?: boolean
   chainId?: number
   contract: {
     address?: string
@@ -293,7 +292,6 @@ export const useEVMCollectionStore = create<EVMCollectionStore>()(
           id,
           name: 'New Smart Contract',
           type: EVMItemType.SmartContract,
-          temporary: true,
           contract: {},
         }
         set((state) => ({
