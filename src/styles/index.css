@@ -129,7 +129,10 @@
     @apply h-1 w-3.5;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-secondary rounded-full border-4 border-solid border-transparent bg-clip-padding;
+    @apply bg-secondary bg-clip-padding;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-secondary-foreground;
   }
 
   #root {

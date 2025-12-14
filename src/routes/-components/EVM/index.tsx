@@ -140,7 +140,7 @@ export function EVM() {
                       minSize={48}
                       maxSize={48}
                       priority={LayoutPriority.Low}
-                      className="no-scrollbar flex overflow-x-scroll!"
+                      className="flex overflow-x-auto!"
                     >
                       {tabs.map((tab) => {
                         const found = findItemInCollections(collections, tab) || temporaryContracts[tab]
