@@ -40,6 +40,7 @@ export const useEVMTabStore = create<{
           if (state.tabs.includes(id)) {
             return { activeTabId: id }
           }
+          console.warn(`[TabStore] Attempted to set non-existent tab as active: ${id}`)
           return state
         }),
       replaceTab: (oldId: string, newId: string) =>
