@@ -78,6 +78,15 @@ export function EVM() {
     }
   }, [chains, setChains])
 
+  useEffect(() => {
+    tabs.forEach((tab) => {
+      const found = findItemInCollections(collections, tab) || temporaryContracts[tab]
+      if (!found) {
+        removeTab(tab)
+      }
+    })
+  }, [tabs, collections, temporaryContracts, removeTab])
+
   const displayContractRequest = useMemo(() => {
     if (tabs.length > 0) return <ContractRequest />
     return <Welcome />
@@ -163,7 +172,6 @@ export function EVM() {
                       {tabs.map((tab) => {
                         const found = findItemInCollections(collections, tab) || temporaryContracts[tab]
                         if (found === undefined) {
-                          removeTab(tab)
                           return null
                         }
 
