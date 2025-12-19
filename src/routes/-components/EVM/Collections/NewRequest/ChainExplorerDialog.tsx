@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, Globe, RotateCwIcon } from 'lucide-react'
+import { ChevronsUpDownIcon, DownloadIcon, Globe, RotateCwIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { isAddress } from 'viem'
@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { getabi } from '@/constants/api'
@@ -123,55 +123,49 @@ export function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Chain</FormLabel>
-                  <Popover open={open} onOpenChange={setOpen} modal>
-                    <PopoverTrigger
-                      render={
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn('justify-between', !field.value && 'text-muted-foreground')}
-                          >
-                            {field.value
-                              ? chains.find((chain) => chain.chainId === field.value)?.name
-                              : 'Select Networks...'}
-                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      }
-                    />
-                    <PopoverContent align="start" className="p-0">
-                      <Command>
-                        <CommandInput placeholder="Search Networks..." className="h-9" />
-                        <CommandEmpty>No chain found.</CommandEmpty>
-                        <CommandGroup className="max-h-64 overflow-y-scroll">
-                          {filteredChains.map((item) => (
-                            <CommandItem
-                              key={item.name}
-                              value={item.name}
-                              onSelect={(currentValue) => {
-                                const chain = chains.find((chain) => chain.name.toLowerCase() === currentValue)
-                                if (chain) {
-                                  form.setValue('chainId', chain.chainId)
-                                  setOpen(false)
-                                }
-                              }}
+                  <div>
+                    <Popover open={open} onOpenChange={setOpen} modal>
+                      <PopoverTrigger
+                        render={
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
                             >
-                              {item.name}
-                              <CheckIcon
-                                className={cn(
-                                  'ml-auto h-4 w-4',
-                                  chains.find((chain) => chain.chainId === field.value)?.name === item.name
-                                    ? 'opacity-100'
-                                    : 'opacity-0',
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                              {field.value
+                                ? chains.find((chain) => chain.chainId === field.value)?.name
+                                : 'Select Networks...'}
+                              <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        }
+                      />
+                      <PopoverContent align="start" className="p-0">
+                        <Command>
+                          <CommandInput placeholder="Search Networks..." className="h-9" />
+                          <CommandEmpty>No chain found.</CommandEmpty>
+                          <CommandGroup className="max-h-64 overflow-y-scroll">
+                            {filteredChains.map((item) => (
+                              <CommandItem
+                                key={item.name}
+                                value={item.name}
+                                onSelect={(currentValue) => {
+                                  const chain = chains.find((chain) => chain.name.toLowerCase() === currentValue)
+                                  if (chain) {
+                                    form.setValue('chainId', chain.chainId)
+                                    setOpen(false)
+                                  }
+                                }}
+                              >
+                                {item.name}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

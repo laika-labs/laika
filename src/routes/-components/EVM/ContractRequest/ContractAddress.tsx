@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, RotateCwIcon, SaveIcon } from 'lucide-react'
+import { ChevronsUpDownIcon, DownloadIcon, RotateCwIcon, SaveIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { isAddress, type Address } from 'viem'
@@ -9,7 +9,7 @@ import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { getabi } from '@/constants/api'
@@ -135,6 +135,7 @@ const VirtualizedChainCommand = ({ chains, selectedChain, onSelectChain }: Virtu
                 <CommandItem
                   key={chain.chainId}
                   disabled={isKeyboardNavActive}
+                  data-checked={chain.chainId === selectedChain?.chainId}
                   className={cn(
                     'absolute top-0 left-0 w-full bg-transparent',
                     focusedIndex === virtualItem.index && 'bg-accent text-accent-foreground',
@@ -152,12 +153,6 @@ const VirtualizedChainCommand = ({ chains, selectedChain, onSelectChain }: Virtu
                   onSelect={() => onSelectChain(chain)}
                 >
                   {chain.name}
-                  <CheckIcon
-                    className={cn(
-                      'ml-auto h-4 w-4',
-                      selectedChain?.chainId === chain.chainId ? 'opacity-100' : 'opacity-0',
-                    )}
-                  />
                 </CommandItem>
               )
             })}
@@ -257,26 +252,28 @@ export function ContractAddress({ id, chainId, address }: ContractAddressProps) 
             <FormLabel>Chain</FormLabel>
             <FormMessage />
           </div>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger
-              render={
-                <Button variant="outline" role="combobox" aria-expanded={open} className="w-[256px] justify-between">
-                  <span className="truncate">{chain?.name ? chain?.name : 'Select Networks...'}</span>
-                  <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              }
-            />
-            <PopoverContent className="w-[256px] p-0">
-              <VirtualizedChainCommand
-                chains={chains}
-                selectedChain={chain}
-                onSelectChain={(selectedChain) => {
-                  updateContractChainId(id, selectedChain.chainId)
-                  setOpen(false)
-                }}
+          <div>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger
+                render={
+                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-[256px] justify-between">
+                    <span className="truncate">{chain?.name ? chain?.name : 'Select Networks...'}</span>
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                }
               />
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="w-64 p-0">
+                <VirtualizedChainCommand
+                  chains={chains}
+                  selectedChain={chain}
+                  onSelectChain={(selectedChain) => {
+                    updateContractChainId(id, selectedChain.chainId)
+                    setOpen(false)
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </FormItem>
         <FormField
           control={form.control}

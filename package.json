@@ -16,8 +16,6 @@
     "@fontsource-variable/inter": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@monaco-editor/react": "^4.7.0",
-    "@radix-ui/react-label": "^2.1.8",
-    "@radix-ui/react-slot": "^1.2.4",
     "@rainbow-me/rainbowkit": "^2.2.10",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.12",

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { formatAbi } from 'abitype'
-import { CheckIcon, ChevronsUpDownIcon, Plus } from 'lucide-react'
+import { ChevronsUpDownIcon, Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { isAddress } from 'viem'
@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
@@ -168,6 +168,7 @@ const VirtualizedChainCommand = ({ chains, selectedChainId, onSelectChain }: Vir
                 <CommandItem
                   key={chain.chainId}
                   disabled={isKeyboardNavActive}
+                  data-checked={chain.chainId === selectedChainId}
                   className={cn(
                     'absolute top-0 left-0 w-full bg-transparent',
                     focusedIndex === virtualItem.index && 'bg-accent text-accent-foreground',
@@ -185,9 +186,6 @@ const VirtualizedChainCommand = ({ chains, selectedChainId, onSelectChain }: Vir
                   onSelect={() => onSelectChain(chain)}
                 >
                   {chain.name}
-                  <CheckIcon
-                    className={cn('ml-auto h-4 w-4', selectedChainId === chain.chainId ? 'opacity-100' : 'opacity-0')}
-                  />
                 </CommandItem>
               )
             })}
@@ -263,34 +261,36 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Chain (Optional)</FormLabel>
-                  <Popover open={open} onOpenChange={setOpen} modal>
-                    <PopoverTrigger
-                      render={
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn('justify-between', !field.value && 'text-muted-foreground')}
-                          >
-                            {field.value
-                              ? chains.find((chain) => chain.chainId === field.value)?.name
-                              : 'Select Networks...'}
-                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      }
-                    />
-                    <PopoverContent align="start" className="p-0">
-                      <VirtualizedChainCommand
-                        chains={chains}
-                        selectedChainId={field.value}
-                        onSelectChain={(selectedChain) => {
-                          form.setValue('chainId', selectedChain.chainId)
-                          setOpen(false)
-                        }}
+                  <div>
+                    <Popover open={open} onOpenChange={setOpen} modal>
+                      <PopoverTrigger
+                        render={
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
+                            >
+                              {field.value
+                                ? chains.find((chain) => chain.chainId === field.value)?.name
+                                : 'Select Networks...'}
+                              <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        }
                       />
-                    </PopoverContent>
-                  </Popover>
+                      <PopoverContent align="start" className="p-0">
+                        <VirtualizedChainCommand
+                          chains={chains}
+                          selectedChainId={field.value}
+                          onSelectChain={(selectedChain) => {
+                            form.setValue('chainId', selectedChain.chainId)
+                            setOpen(false)
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

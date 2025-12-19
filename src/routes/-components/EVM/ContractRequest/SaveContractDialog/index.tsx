@@ -6,7 +6,7 @@ import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
