@@ -26,8 +26,8 @@ export function ContractRequest() {
   }
 
   return (
-    <Allotment defaultSizes={[100, 99999, 256]} proportionalLayout={false} vertical>
-      <Allotment.Pane minSize={100} maxSize={100} priority={LayoutPriority.High} className="p-4">
+    <Allotment defaultSizes={[88, 99999, 256]} proportionalLayout={false} vertical>
+      <Allotment.Pane minSize={88} maxSize={88} priority={LayoutPriority.High} className="p-4">
         <ContractAddress
           id={smartContract.id}
           chainId={smartContract?.chainId}

@@ -42,7 +42,7 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
   }
 
   const handleToolbarChange = (sizes: number[]) => {
-    setOpen(sizes?.[1] > 48)
+    setOpen(sizes?.[1] > 40)
   }
 
   useEffect(() => {
@@ -56,26 +56,25 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
   return (
     <Tabs value={value} onValueChange={handleValueChange} orientation="vertical" className="size-full">
       <Allotment onChange={handleToolbarChange}>
-        <Allotment.Pane minSize={48} maxSize={48}>
+        <Allotment.Pane minSize={40} maxSize={40}>
           <TooltipProvider>
             <TabsList className="gap-2 bg-inherit p-1.5">
               {activeTabId !== null && (
                 <Tooltip>
                   <TabsTrigger
                     value="code"
-                    className={cn(
-                      'h-9 flex-none px-0 py-0',
-                      open && 'data-[state=active]:text-primary dark:data-[state=active]:text-primary',
-                    )}
+                    className={cn('flex-none', open && 'aria-selected:text-primary dark:aria-selected:text-primary')}
                     onClick={handleToolbarOpen}
-                    asChild
-                  >
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" aria-label="Code Snippet">
-                        <Code2 />
-                      </Button>
-                    </TooltipTrigger>
-                  </TabsTrigger>
+                    render={
+                      <TooltipTrigger
+                        render={
+                          <Button variant="ghost" size="icon" aria-label="Code Snippet">
+                            <Code2 />
+                          </Button>
+                        }
+                      />
+                    }
+                  />
                   <TooltipContent side="left">
                     <p>Code Snippet</p>
                   </TooltipContent>
@@ -84,19 +83,18 @@ export function Toolbar({ toolbarRef }: ToolbarProps) {
               <Tooltip>
                 <TabsTrigger
                   value="unit-converter"
-                  className={cn(
-                    'h-9 flex-none px-0 py-0',
-                    open && 'data-[state=active]:text-primary dark:data-[state=active]:text-primary',
-                  )}
+                  className={cn('flex-none', open && 'aria-selected:text-primary dark:aria-selected:text-primary')}
                   onClick={handleToolbarOpen}
-                  asChild
-                >
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Unit Converter">
-                      <ArrowRightLeft />
-                    </Button>
-                  </TooltipTrigger>
-                </TabsTrigger>
+                  render={
+                    <TooltipTrigger
+                      render={
+                        <Button variant="ghost" size="icon" aria-label="Unit Converter">
+                          <ArrowRightLeft />
+                        </Button>
+                      }
+                    />
+                  }
+                />
                 <TooltipContent side="left">
                   <p>Unit Converter</p>
                 </TooltipContent>

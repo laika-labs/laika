@@ -15,11 +15,13 @@ export function NewRequest() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
-          New
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="secondary" size="sm">
+            New
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New Request</DialogTitle>

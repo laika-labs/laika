@@ -28,7 +28,7 @@ export function DocumentList() {
 
   return (
     <Allotment className="h-full w-full" vertical>
-      <Allotment.Pane minSize={48} maxSize={48} className="flex items-center p-2">
+      <Allotment.Pane minSize={40} maxSize={40} className="flex items-center p-2">
         <small className="text-sm leading-none font-medium">Documentation</small>
       </Allotment.Pane>
       <Allotment.Pane className="py-1">

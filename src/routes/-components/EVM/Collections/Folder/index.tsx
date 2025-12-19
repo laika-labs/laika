@@ -93,11 +93,13 @@ export function Folder({ folder, level = 0, search }: CollectionProps) {
             </div>
           </div>
           <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
-                <MoreHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
+                  <MoreHorizontalIcon className="h-4 w-4" />
+                </Button>
+              }
+            />
             <DropdownMenuContent>
               <DropdownMenuItem onClick={handleAddSmartContract}>New Request</DropdownMenuItem>
               <DropdownMenuItem onClick={handleAddFolder}>New Folder</DropdownMenuItem>

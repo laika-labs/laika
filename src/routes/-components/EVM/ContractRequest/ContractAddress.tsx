@@ -258,12 +258,14 @@ export function ContractAddress({ id, chainId, address }: ContractAddressProps) 
             <FormMessage />
           </div>
           <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" role="combobox" aria-expanded={open} className="w-[256px] justify-between">
-                <span className="truncate">{chain?.name ? chain?.name : 'Select Networks...'}</span>
-                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
+            <PopoverTrigger
+              render={
+                <Button variant="outline" role="combobox" aria-expanded={open} className="w-[256px] justify-between">
+                  <span className="truncate">{chain?.name ? chain?.name : 'Select Networks...'}</span>
+                  <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              }
+            />
             <PopoverContent className="w-[256px] p-0">
               <VirtualizedChainCommand
                 chains={chains}

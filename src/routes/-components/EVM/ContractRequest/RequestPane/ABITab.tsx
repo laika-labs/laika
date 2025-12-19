@@ -71,11 +71,13 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
         <CardHeader className="flex flex-row justify-between">
           <CardTitle>ABI</CardTitle>
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button variant="secondary" size="sm">
-                Edit
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger
+              render={
+                <Button variant="secondary" size="sm">
+                  Edit
+                </Button>
+              }
+            />
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Edit ABI</DialogTitle>
@@ -89,22 +91,20 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
                       <FormItem>
                         <FormLabel>ABI</FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Paste your ABI here."
-                            className="h-[240px] overflow-y-auto"
-                            {...field}
-                          />
+                          <Textarea placeholder="Paste your ABI here." className="h-60 overflow-y-auto" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <DialogFooter>
-                    <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Close
-                      </Button>
-                    </DialogClose>
+                    <DialogClose
+                      render={
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      }
+                    />
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>
                 </form>
@@ -114,12 +114,8 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
         </CardHeader>
         <CardContent>
           <TabsList className="flex h-auto w-fit gap-4 bg-transparent p-0">
-            <TabsTrigger value="object" asChild>
-              <TabsButton>Object</TabsButton>
-            </TabsTrigger>
-            <TabsTrigger value="table" asChild>
-              <TabsButton>Table</TabsButton>
-            </TabsTrigger>
+            <TabsTrigger value="object" render={<TabsButton>Object</TabsButton>} />
+            <TabsTrigger value="table" render={<TabsButton>Table</TabsButton>} />
           </TabsList>
           <TabsContent value="object">
             <Inspector

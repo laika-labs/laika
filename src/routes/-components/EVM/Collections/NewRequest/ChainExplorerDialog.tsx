@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogClose } from '@radix-ui/react-dialog'
 import { CheckIcon, ChevronsUpDownIcon, DownloadIcon, Globe, RotateCwIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -10,7 +9,15 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -89,19 +96,21 @@ export function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Card className="text-center">
-          <CardHeader className="justify-center">
-            <Globe className="size-10" />
-          </CardHeader>
-          <CardContent>
-            <CardTitle>Chain Explorer</CardTitle>
-          </CardContent>
-          <CardFooter>
-            <p className="text-muted-foreground text-sm">Create a request from chain explorer</p>
-          </CardFooter>
-        </Card>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Card className="text-center">
+            <CardHeader className="justify-center">
+              <Globe className="size-10" />
+            </CardHeader>
+            <CardContent>
+              <CardTitle>Chain Explorer</CardTitle>
+            </CardContent>
+            <CardFooter>
+              <p className="text-muted-foreground text-sm">Create a request from chain explorer</p>
+            </CardFooter>
+          </Card>
+        }
+      />
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>New Request from Chain Explorer</DialogTitle>
@@ -115,25 +124,27 @@ export function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps) {
                 <FormItem className="flex flex-col">
                   <FormLabel>Chain</FormLabel>
                   <Popover open={open} onOpenChange={setOpen} modal>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn('justify-between', !field.value && 'text-muted-foreground')}
-                        >
-                          {field.value
-                            ? chains.find((chain) => chain.chainId === field.value)?.name
-                            : 'Select Networks...'}
-                          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
+                    <PopoverTrigger
+                      render={
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn('justify-between', !field.value && 'text-muted-foreground')}
+                          >
+                            {field.value
+                              ? chains.find((chain) => chain.chainId === field.value)?.name
+                              : 'Select Networks...'}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      }
+                    />
                     <PopoverContent align="start" className="p-0">
                       <Command>
                         <CommandInput placeholder="Search Networks..." className="h-9" />
                         <CommandEmpty>No chain found.</CommandEmpty>
-                        <CommandGroup className="max-h-[256px] overflow-y-scroll">
+                        <CommandGroup className="max-h-64 overflow-y-scroll">
                           {filteredChains.map((item) => (
                             <CommandItem
                               key={item.name}
@@ -179,11 +190,13 @@ export function ChainExplorerDialog({ onDone }: ChainExplorerDialogProps) {
               )}
             />
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Close
-                </Button>
-              </DialogClose>
+              <DialogClose
+                render={
+                  <Button type="button" variant="secondary">
+                    Close
+                  </Button>
+                }
+              />
               <Button type="submit">
                 {loading ? (
                   <RotateCwIcon className="mr-2 h-4 w-4 animate-spin" />

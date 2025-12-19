@@ -22,14 +22,14 @@ export function Collections() {
   }
 
   return (
-    <Allotment defaultSizes={[48, 36, 99999]} className="h-full w-full" vertical>
-      <Allotment.Pane minSize={48} maxSize={48}>
+    <Allotment defaultSizes={[40, 28, 99999]} className="size-full" vertical>
+      <Allotment.Pane minSize={40} maxSize={40}>
         <div className="flex items-center justify-between p-2">
           <small className="text-sm leading-none font-medium">Collections</small>
           <NewRequest />
         </div>
       </Allotment.Pane>
-      <Allotment.Pane minSize={36} maxSize={36} className="px-2">
+      <Allotment.Pane minSize={28} maxSize={28} className="px-2">
         <Input
           type="text"
           placeholder="Search"

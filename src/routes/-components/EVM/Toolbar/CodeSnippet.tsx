@@ -58,12 +58,14 @@ export function CodeSnippet({ handleClose }: CodeSnippetProps) {
       </div>
       <div className="p-2">
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
-              {value ? codegen?.name : 'Select framework...'}
-              <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
+          <PopoverTrigger
+            render={
+              <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+                {value ? codegen?.name : 'Select framework...'}
+                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            }
+          />
           <PopoverContent align="start" className="w-[320px] p-0">
             <Command>
               <CommandInput placeholder="Search framework..." className="h-9" />

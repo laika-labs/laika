@@ -76,11 +76,13 @@ export function SmartContract({ smartContract, level, search }: SmartContractPro
           </div>
         </div>
         <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            render={
+              <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            }
+          />
           <DropdownMenuContent>
             <DropdownMenuItem onClick={handleToggleRename}>Rename</DropdownMenuItem>
             <DropdownMenuItem onClick={handleToggleDelete}>Delete</DropdownMenuItem>

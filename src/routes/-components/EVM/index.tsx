@@ -104,22 +104,24 @@ export function EVM() {
             visible={isLaptop}
             snap
           >
-            <Allotment defaultSizes={[48, 99999]}>
-              <Allotment.Pane minSize={48} maxSize={48}>
+            <Allotment defaultSizes={[40, 99999]}>
+              <Allotment.Pane minSize={40} maxSize={40}>
                 <TooltipProvider>
                   <TabsList className="gap-2 bg-inherit p-1.5">
                     <Tooltip>
                       <TabsTrigger
                         value="collections"
-                        className="data-[state=active]:text-primary dark:data-[state=active]:text-primary h-9 flex-none px-0 py-0"
-                        asChild
-                      >
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" aria-label="Collections">
-                            <FoldersIcon />
-                          </Button>
-                        </TooltipTrigger>
-                      </TabsTrigger>
+                        className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
+                        render={
+                          <TooltipTrigger
+                            render={
+                              <Button variant="ghost" size="icon" aria-label="Collections">
+                                <FoldersIcon />
+                              </Button>
+                            }
+                          />
+                        }
+                      />
                       <TooltipContent side="right">
                         <p>Collections</p>
                       </TooltipContent>
@@ -127,15 +129,17 @@ export function EVM() {
                     <Tooltip>
                       <TabsTrigger
                         value="docs"
-                        className="data-[state=active]:text-primary dark:data-[state=active]:text-primary h-9 flex-none px-0 py-0"
-                        asChild
-                      >
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" aria-label="Documentation">
-                            <BookTextIcon />
-                          </Button>
-                        </TooltipTrigger>
-                      </TabsTrigger>
+                        className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
+                        render={
+                          <TooltipTrigger
+                            render={
+                              <Button variant="ghost" size="icon" aria-label="Documentation">
+                                <BookTextIcon />
+                              </Button>
+                            }
+                          />
+                        }
+                      />
                       <TooltipContent side="right">
                         <p>Documentation</p>
                       </TooltipContent>
@@ -156,16 +160,16 @@ export function EVM() {
           <Allotment.Pane priority={LayoutPriority.Low}>
             <TabsContent value="collections" className="m-0 size-full">
               <Allotment
-                defaultSizes={[99999, 48]}
+                defaultSizes={[99999, 40]}
                 ref={toolbarRef}
                 onChange={handleToolbarChange}
                 proportionalLayout={false}
               >
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  <Allotment defaultSizes={[48, 99999]} proportionalLayout={false} vertical>
+                  <Allotment defaultSizes={[40, 99999]} proportionalLayout={false} vertical>
                     <Allotment.Pane
-                      minSize={48}
-                      maxSize={48}
+                      minSize={40}
+                      maxSize={40}
                       priority={LayoutPriority.Low}
                       className="flex overflow-x-auto!"
                     >
@@ -206,7 +210,7 @@ export function EVM() {
                           </Button>
                         )
                       })}
-                      <Button variant="ghost" className="h-auto w-12 rounded-none" onClick={handleAddTemporaryContract}>
+                      <Button variant="ghost" className="h-auto w-10 rounded-none" onClick={handleAddTemporaryContract}>
                         <PlusIcon />
                       </Button>
                       {activeTabId !== null && (
@@ -219,9 +223,9 @@ export function EVM() {
                   </Allotment>
                 </Allotment.Pane>
                 <Allotment.Pane
-                  minSize={48}
+                  minSize={40}
                   maxSize={448}
-                  preferredSize={48}
+                  preferredSize={40}
                   priority={LayoutPriority.Low}
                   visible={isLaptop}
                 >

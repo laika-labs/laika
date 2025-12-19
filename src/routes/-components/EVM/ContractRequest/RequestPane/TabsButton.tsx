@@ -5,9 +5,9 @@ export function TabsButton({ children, className, ...props }: React.ComponentPro
     <button
       className={cn(
         className,
-        'relative px-0 pt-0',
-        'data-[state=active]:bg-transparent data-[state=active]:shadow-none',
-        'data-[state=active]:after:bg-primary data-[state=active]:after:absolute data-[state=active]:after:inset-x-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-0.5',
+        'relative border-none px-0 pt-0',
+        'after:transition-none',
+        'aria-selected:after:bg-primary aria-selected:bg-transparent aria-selected:after:absolute aria-selected:after:inset-auto aria-selected:after:bottom-0 aria-selected:after:h-0.5 aria-selected:after:w-full aria-selected:after:opacity-100 dark:aria-selected:bg-transparent',
       )}
       {...props}
     >
