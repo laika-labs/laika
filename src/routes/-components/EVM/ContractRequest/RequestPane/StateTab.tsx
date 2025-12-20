@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from 'react'
+import { CornerDownRightIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Abi, Address } from 'viem'
 import { useReadContracts } from 'wagmi'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table'
 import type { EVMABIMethod, EVMContract } from '@/store/collections'
 
 export function StateTab({ smartContract }: { smartContract: EVMContract }) {
@@ -41,40 +41,20 @@ export function StateTab({ smartContract }: { smartContract: EVMContract }) {
   }, [isError])
 
   return (
-    <Card className="w-full rounded-none">
-      <CardHeader>
-        <CardTitle>INFO</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableCaption>Result has been pre-fetched.</TableCaption>
-          <TableBody>
-            {data &&
-              !isLoading &&
-              data.map((row, idx) => {
-                return (
-                  <TableRow key={prefetchableMethods[idx].functionName}>
-                    <TableCell>{`${prefetchableMethods[idx].functionName}`}</TableCell>
-                    <TableCell>{`${row.result}`}</TableCell>
-                  </TableRow>
-                )
-              })}
-            {isLoading &&
-              prefetchableMethods.map((method) => {
-                return (
-                  <TableRow key={method.functionName}>
-                    <TableCell>
-                      <Skeleton className="h-4 w-[250px]" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-[250px]" />
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-2">
+      {prefetchableMethods.map((method, idx) => {
+        return (
+          <Card key={method.functionName} size="sm">
+            <CardHeader>
+              <CardTitle className="text-muted-foreground font-mono">{method.functionName}</CardTitle>
+            </CardHeader>
+            <CardFooter className="border-foreground/10 gap-1 border-t">
+              <CornerDownRightIcon className="text-muted-foreground size-3" />
+              {isLoading ? <Skeleton className="h-4.75 w-full" /> : `${data?.[idx]?.result}`}
+            </CardFooter>
+          </Card>
+        )
+      })}
+    </div>
   )
 }

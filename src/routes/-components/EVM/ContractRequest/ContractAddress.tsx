@@ -256,13 +256,13 @@ export function ContractAddress({ id, chainId, address }: ContractAddressProps) 
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger
                 render={
-                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-[256px] justify-between">
+                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-48 justify-between">
                     <span className="truncate">{chain?.name ? chain?.name : 'Select Networks...'}</span>
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 }
               />
-              <PopoverContent className="w-64 p-0">
+              <PopoverContent className="w-64 p-0" align="start">
                 <VirtualizedChainCommand
                   chains={chains}
                   selectedChain={chain}

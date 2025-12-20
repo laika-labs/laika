@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { Address } from 'viem'
 
+import { Card, CardContent } from '@/components/ui/card'
 import type { EVMABIMethod, EVMContract } from '@/store/collections'
 
 import { WriteMethod } from './WriteMethod'
@@ -28,10 +29,12 @@ export function WriteTab({ smartContract }: { smartContract: EVMContract }) {
   return (
     <div className="flex w-full flex-col gap-2">
       {writeableMethods.length === 0 && (
-        <div className="my-2 text-center underline">
-          <p>No writable methods found for this contract.</p>
-          <p>Please use another tab to interact with the contract.</p>
-        </div>
+        <Card size="sm">
+          <CardContent className="my-2 text-center">
+            <p>No writable methods found for this contract.</p>
+            <p>Please use another tab to interact with the contract.</p>
+          </CardContent>
+        </Card>
       )}
       {writeableMethods.map((method, idx) => {
         return (

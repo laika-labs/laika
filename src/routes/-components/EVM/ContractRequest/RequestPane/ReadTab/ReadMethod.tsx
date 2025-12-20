@@ -63,9 +63,9 @@ export function ReadMethod({
   }, [chainId, contractAddress, data, error, functionName, isFetchedAfterMount, isRefetching, pushResponse])
 
   return (
-    <Card className="w-full rounded-none">
+    <Card size="sm">
       <CardHeader>
-        <CardTitle>{functionName}</CardTitle>
+        <CardTitle className="text-muted-foreground font-mono">{functionName}</CardTitle>
       </CardHeader>
       {abi && abi.inputs && abi.inputs.length > 0 && (
         <CardContent>
