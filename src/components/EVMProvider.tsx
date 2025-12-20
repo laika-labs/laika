@@ -41,7 +41,12 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
     }
 
     const rpcHTTP = chain.rpc
-      .filter((rpc) => rpc.url.startsWith('http') && !rpc.url.includes('API_KEY') && rpc.tracking === 'none')
+      .filter(
+        (rpc) =>
+          rpc.url.startsWith('http') &&
+          !rpc.url.includes('API_KEY') &&
+          (rpc?.tracking === 'none' || rpc?.tracking === undefined),
+      )
       .map((rpc) => rpc.url)
 
     return defineChain({
