@@ -113,7 +113,7 @@ export function ABITab({ smartContract }: { smartContract: EVMContract }) {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <TabsList className="flex h-auto w-fit gap-4 bg-transparent p-0">
+          <TabsList className="h-auto w-fit flex-row! gap-2 bg-transparent p-0">
             <TabsTrigger value="object" render={<TabsButton>Object</TabsButton>} />
             <TabsTrigger value="table" render={<TabsButton>Table</TabsButton>} />
           </TabsList>
