@@ -35,9 +35,7 @@ export function ContractRequest() {
         />
       </Allotment.Pane>
       <Allotment.Pane minSize={0} priority={LayoutPriority.High} className="p-4">
-        <div className="h-full overflow-y-auto p-px">
-          <RequestPane />
-        </div>
+        <RequestPane />
       </Allotment.Pane>
       <Allotment.Pane minSize={256} preferredSize={256} priority={LayoutPriority.Low} snap>
         <ResponsePane />

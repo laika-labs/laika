@@ -28,23 +28,23 @@ export function RequestPane() {
   }
 
   return (
-    <Tabs defaultValue="state">
+    <Tabs defaultValue="state" className="flex h-full flex-col">
       <TabsList className="h-auto w-fit flex-row! gap-2 bg-transparent p-0">
         <TabsTrigger value="state" render={<TabsButton>State</TabsButton>} />
         <TabsTrigger value="read" render={<TabsButton>Read</TabsButton>} />
         <TabsTrigger value="write" render={<TabsButton>Write</TabsButton>} />
         <TabsTrigger value="abi" render={<TabsButton>ABI</TabsButton>} />
       </TabsList>
-      <TabsContent value="state">
+      <TabsContent value="state" className="flex-1 overflow-y-auto p-px">
         <StateTab smartContract={smartContract} />
       </TabsContent>
-      <TabsContent value="read">
+      <TabsContent value="read" className="flex-1 overflow-y-auto p-px">
         <ReadTab smartContract={smartContract} />
       </TabsContent>
-      <TabsContent value="write">
+      <TabsContent value="write" className="flex-1 overflow-y-auto p-px">
         <WriteTab smartContract={smartContract} />
       </TabsContent>
-      <TabsContent className="flex-auto" value="abi">
+      <TabsContent value="abi" className="flex-1 overflow-y-auto p-px">
         <ABITab smartContract={smartContract} />
       </TabsContent>
     </Tabs>

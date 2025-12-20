@@ -83,7 +83,7 @@ export function Folder({ folder, level = 0, search }: CollectionProps) {
             className="flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-2"
             onClick={handleToggleOpen}
           >
-            {folder.isOpen ? <FolderOpenIcon className="h-4 w-4" /> : <FolderIcon className="h-4 w-4" />}
+            {folder.isOpen ? <FolderOpenIcon className="size-3.5" /> : <FolderIcon className="size-3.5" />}
             <div className="flex flex-1 truncate select-none">
               {isRenaming ? (
                 <Rename id={folder.id} itemName={folder.name} onSave={handleToggleRename} />
@@ -96,7 +96,7 @@ export function Folder({ folder, level = 0, search }: CollectionProps) {
             <DropdownMenuTrigger
               render={
                 <Button variant="ghost" className="h-auto p-2 focus-visible:ring-0" aria-label="More options">
-                  <MoreHorizontalIcon className="h-4 w-4" />
+                  <MoreHorizontalIcon className="size-3.5" />
                 </Button>
               }
             />

@@ -113,15 +113,11 @@ export function EVM() {
                         value="collections"
                         className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
                         render={
-                          <TooltipTrigger
-                            render={
-                              <Button variant="ghost" size="icon" aria-label="Collections">
-                                <FoldersIcon />
-                              </Button>
-                            }
-                          />
+                          <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Collections" />} />
                         }
-                      />
+                      >
+                        <FoldersIcon />
+                      </TabsTrigger>
                       <TooltipContent side="right">
                         <p>Collections</p>
                       </TooltipContent>
@@ -131,15 +127,11 @@ export function EVM() {
                         value="docs"
                         className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
                         render={
-                          <TooltipTrigger
-                            render={
-                              <Button variant="ghost" size="icon" aria-label="Documentation">
-                                <BookTextIcon />
-                              </Button>
-                            }
-                          />
+                          <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Documentation" />} />
                         }
-                      />
+                      >
+                        <BookTextIcon />
+                      </TabsTrigger>
                       <TooltipContent side="right">
                         <p>Documentation</p>
                       </TooltipContent>

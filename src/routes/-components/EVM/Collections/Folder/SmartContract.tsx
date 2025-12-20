@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import debounce from 'lodash.debounce'
 import times from 'lodash.times'
-import { MoreHorizontal } from 'lucide-react'
+import { FileCodeIcon, MoreHorizontal } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { isItemMatchSearchText } from '@/lib/collections'
@@ -66,7 +65,7 @@ export function SmartContract({ smartContract, level, search }: SmartContractPro
       ))}
       <div className="flex flex-1 truncate px-2">
         <div className="flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-2" onClick={handleOpen}>
-          <Badge className="p-0.5">Contract</Badge>
+          <FileCodeIcon className="size-3.5" />
           <div className="flex flex-1 truncate select-none">
             {isRenaming ? (
               <Rename id={smartContract.id} itemName={smartContract.name} onSave={handleToggleRename} />
