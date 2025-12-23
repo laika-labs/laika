@@ -40,7 +40,8 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
       return mainnet
     }
 
-    const rpcHTTP = chain.rpc
+    // Get available RPCs from chain
+    const availableRpcs = chain.rpc
       .filter(
         (rpc) =>
           rpc.url.startsWith('http') &&
@@ -48,6 +49,11 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
           (rpc?.tracking === 'none' || rpc?.tracking === undefined),
       )
       .map((rpc) => rpc.url)
+
+    // Prioritize selected RPC URL if it exists
+    const rpcHTTP = smartContract?.rpcUrl
+      ? [smartContract.rpcUrl, ...availableRpcs.filter((url) => url !== smartContract.rpcUrl)]
+      : availableRpcs
 
     return defineChain({
       id: chain.chainId,
@@ -62,20 +68,24 @@ export function EVMProvider({ children }: React.PropsWithChildren) {
         },
       },
     })
-  }, [activeTabId, chainList, smartContract?.chainId])
+  }, [activeTabId, chainList, smartContract?.chainId, smartContract?.rpcUrl])
 
   const { connectors } = getDefaultWallets({
     appName: 'Laika',
     projectId: import.meta.env.VITE_PROJECT_ID ?? 'YOUR_PROJECT_ID',
   })
 
-  const wagmiConfig = createConfig({
-    chains: [definedChain],
-    transports: {
-      [definedChain.id]: http(),
-    },
-    connectors,
-  })
+  const wagmiConfig = useMemo(
+    () =>
+      createConfig({
+        chains: [definedChain],
+        transports: {
+          [definedChain.id]: http(),
+        },
+        connectors,
+      }),
+    [definedChain, connectors],
+  )
 
   const resolvedRainbowKitTheme = useMemo(() => {
     const options = { borderRadius: 'small' } as const

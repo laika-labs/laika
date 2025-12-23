@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { CornerDownRightIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Abi, Address } from 'viem'
@@ -30,15 +30,24 @@ export function StateTab({ smartContract }: { smartContract: EVMContract }) {
     })
   }, [smartContract.chainId, smartContract.contract.abi, smartContract.contract?.address])
 
-  const { data, isError, isLoading } = useReadContracts({
+  const { data, isError, isLoading, refetch } = useReadContracts({
     contracts: prefetchableMethods,
   })
+
+  const prevRpcUrlRef = useRef<string | undefined>(smartContract.rpcUrl)
 
   useEffect(() => {
     if (isError) {
       toast.error('Error: Cannot fetch data.')
     }
   }, [isError])
+
+  useEffect(() => {
+    if (prevRpcUrlRef.current !== smartContract.rpcUrl && prefetchableMethods.length > 0) {
+      refetch()
+    }
+    prevRpcUrlRef.current = smartContract.rpcUrl
+  }, [smartContract.rpcUrl, prefetchableMethods.length, refetch])
 
   return (
     <div className="flex flex-col gap-2">
