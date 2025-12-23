@@ -27,9 +27,9 @@ export function WriteMethod({
 
   const { pushResponse } = useResponseStore()
 
-  const { mutate: switchChain } = useSwitchChain()
+  const { switchChain } = useSwitchChain()
 
-  const { mutate: writeContract, isPending } = useWriteContract({})
+  const { writeContract, isPending } = useWriteContract({})
 
   const handleWriteClick = () => {
     writeContract(

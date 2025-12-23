@@ -5,7 +5,7 @@ import { findItemInCollections } from '@/lib/collections'
 import { useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 
-import { ContractAddress } from './ContractAddress'
+import { ContractInput } from './ContractInput'
 import { RequestPane } from './RequestPane'
 import { ResponsePane } from './ResponsePane'
 
@@ -28,7 +28,7 @@ export function ContractRequest() {
   return (
     <Allotment defaultSizes={[88, 99999, 256]} proportionalLayout={false} vertical>
       <Allotment.Pane minSize={88} maxSize={88} priority={LayoutPriority.High} className="p-4">
-        <ContractAddress
+        <ContractInput
           id={smartContract.id}
           chainId={smartContract?.chainId}
           address={smartContract.contract?.address || ''}

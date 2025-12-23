@@ -15,6 +15,7 @@ export interface EVMContract {
   name: string
   type: typeof EVMItemType.SmartContract
   chainId?: number
+  rpcUrl?: string
   contract: {
     address?: string
     abi?: string
@@ -63,6 +64,7 @@ export interface EVMCollectionStore {
   addFolder: (id: string, name?: string) => string
   addSmartContract: (id: string, cb: (contract: EVMContract) => void) => void
   updateContractChainId: (id: string, chainId: number) => void
+  updateContractRpcUrl: (id: string, rpcUrl: string) => void
   updateContractAddress: (id: string, address: string) => void
   updateContractABI: (id: string, abi: string) => void
   updateContractComment: (id: string, methodName: string, comment: string) => void
@@ -202,6 +204,29 @@ export const useEVMCollectionStore = create<EVMCollectionStore>()(
               temporaryContracts: {
                 ...state.temporaryContracts,
                 [id]: { ...tempContract, chainId },
+              },
+            }
+          }
+
+          return state
+        }),
+      updateContractRpcUrl: (id: string, rpcUrl: string) =>
+        set((state) => {
+          const item = findItemInCollections(state.collections, id)
+
+          if (item && item.type === EVMItemType.SmartContract) {
+            item.rpcUrl = rpcUrl
+            return {
+              collections: state.collections,
+            }
+          }
+
+          const tempContract = state.temporaryContracts[id]
+          if (tempContract) {
+            return {
+              temporaryContracts: {
+                ...state.temporaryContracts,
+                [id]: { ...tempContract, rpcUrl },
               },
             }
           }
