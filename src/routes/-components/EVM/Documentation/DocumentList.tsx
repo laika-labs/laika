@@ -42,7 +42,7 @@ export function DocumentList() {
                 )}
                 onClick={handleClick(collection.id)}
               >
-                <FileText className="h-4 w-4" />
+                <FileText className="size-3.5" />
                 <div className="flex flex-1 truncate select-none">
                   <small className="truncate py-2 text-sm leading-none font-medium">{collection.name}</small>
                 </div>
