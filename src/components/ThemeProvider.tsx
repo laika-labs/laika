@@ -49,14 +49,22 @@ export function ThemeProvider({
 
     root.classList.remove('light', 'dark')
 
+    let appliedTheme: 'light' | 'dark'
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-
-      root.classList.add(systemTheme)
-      return
+      appliedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } else {
+      appliedTheme = theme
     }
 
-    root.classList.add(theme)
+    root.classList.add(appliedTheme)
+
+    // Update theme-color meta tag for browser chrome
+    const themeColor = appliedTheme === 'dark' ? '#09090b' : '#f9f9f9'
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', themeColor)
+    }
+
     window.document.head.removeChild(css)
   }, [theme])
 

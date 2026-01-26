@@ -3,27 +3,45 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronsUpDownIcon, DownloadIcon, RotateCwIcon, SaveIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { isAddress, type Address } from 'viem'
+import { isAddress } from 'viem'
 import * as z from 'zod'
 
+import { EnvironmentVariableInput } from '@/components/EnvironmentVariableInput'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { getabi } from '@/constants/api'
 import { findItemInCollections } from '@/lib/collections'
+import { hasVariables, substituteVariables } from '@/lib/environment'
 import { useEVMChainsStore } from '@/store/chains'
 import { EVMItemType, useEVMCollectionStore, type EVMContract } from '@/store/collections'
+import { useEnvironmentStore } from '@/store/environments'
 
 import { SaveContractDialog } from '../SaveContractDialog'
 import { RPCCommand } from './RPCCommand'
 import { VirtualizedChainCommand } from './VirtualizedChainCommand'
 
-const formSchema = z.object({
-  address: z.string().refine(isAddress, {
-    message: '(Invalid address)',
-  }),
-})
+const createFormSchema = (getVariableValue: (key: string) => string | null) =>
+  z.object({
+    address: z.string().refine(
+      (val) => {
+        if (!val || val.trim() === '') {
+          return true
+        }
+        if (hasVariables(val)) {
+          const substituted = substituteVariables(val, getVariableValue)
+          if (hasVariables(substituted)) {
+            return true
+          }
+          return isAddress(substituted)
+        }
+        return isAddress(val)
+      },
+      {
+        message: '(Invalid address)',
+      },
+    ),
+  })
 
 interface ContractInputProps {
   id: string
@@ -46,6 +64,7 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
     collections,
   } = useEVMCollectionStore()
   const { chains } = useEVMChainsStore()
+  const { getVariableValue } = useEnvironmentStore()
 
   const isTemporary = temporaryContracts[id] !== undefined
 
@@ -75,16 +94,14 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
     if (!contract?.rpcUrl) return 'Select RPC...'
     const rpc = availableRpcs.find((rpc) => rpc.url === contract.rpcUrl)
     if (!rpc) return 'Select RPC...'
-    // Show shortened URL
     try {
       const url = new URL(rpc.url)
       return `${url.hostname}${url.pathname !== '/' ? url.pathname : ''}`
     } catch {
-      return rpc.url.length > 40 ? `${rpc.url.slice(0, 40)}...` : rpc.url
+      return rpc.url.length > 40 ? `${rpc.url.slice(0, 40)}…` : rpc.url
     }
   }, [contract?.rpcUrl, availableRpcs])
 
-  // Clear RPC URL if it's not valid for the current chain
   useEffect(() => {
     if (chain && contract?.rpcUrl) {
       const availableRpcs = chain.rpc.filter(
@@ -95,7 +112,6 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
       )
       const isValidRpc = availableRpcs.some((rpc) => rpc.url === contract.rpcUrl)
       if (!isValidRpc && availableRpcs.length > 0) {
-        // Clear invalid RPC URL when chain changes
         updateContractRpcUrl(id, '')
       }
     }
@@ -104,6 +120,8 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
   const showLoadContract = useMemo(() => {
     return chain?.explorers?.find((explorer) => getabi?.[explorer.url]) !== undefined
   }, [chain?.explorers])
+
+  const formSchema = useMemo(() => createFormSchema(getVariableValue), [getVariableValue])
 
   const handleLoadContract = useCallback(async () => {
     if (!chain) {
@@ -118,7 +136,11 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
 
     try {
       setLoading(true)
-      const response = await fetch(`${getabi[explorer.url].replace('${address}', address)}`)
+      const substitutedAddr = substituteVariables(address, getVariableValue)
+      if (!isAddress(substitutedAddr)) {
+        throw new Error('Invalid contract address')
+      }
+      const response = await fetch(`${getabi[explorer.url].replace('${address}', substitutedAddr)}`)
       const data = await response.json()
 
       if (data.status !== '1') {
@@ -133,17 +155,17 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
       }
     }
     setLoading(false)
-  }, [address, chain, id, updateContractABI])
+  }, [address, chain, id, updateContractABI, getVariableValue])
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<ReturnType<typeof createFormSchema>>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      address: address as Address,
+      address: address,
     },
   })
 
   const onSubmit = useCallback(
-    (values: z.infer<typeof formSchema>) => {
+    (values: z.infer<ReturnType<typeof createFormSchema>>) => {
       updateContractAddress(id, values.address)
     },
     [id, updateContractAddress],
@@ -151,7 +173,7 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
 
   useEffect(() => {
     form.reset({
-      address: address as Address,
+      address: address,
     })
 
     const subscription = form.watch(() => {
@@ -225,7 +247,7 @@ export function ContractInput({ id, chainId, address }: ContractInputProps) {
                 <FormMessage />
               </div>
               <FormControl>
-                <Input placeholder="Contract Address" {...field} />
+                <EnvironmentVariableInput placeholder="Contract address…" {...field} />
               </FormControl>
             </FormItem>
           )}

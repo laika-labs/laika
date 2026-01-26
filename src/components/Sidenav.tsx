@@ -21,7 +21,7 @@ export function Sidenav() {
           'relative flex h-auto w-full flex-col space-y-1 p-2 text-xs',
         )}
       >
-        <Ethereum />
+        <Ethereum aria-hidden="true" />
         <span>EVM</span>
       </Link>
     </div>

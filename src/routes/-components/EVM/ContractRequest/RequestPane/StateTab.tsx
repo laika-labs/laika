@@ -1,40 +1,54 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { CornerDownRightIcon } from 'lucide-react'
 import { toast } from 'sonner'
-import type { Abi, Address } from 'viem'
+import type { Abi } from 'viem'
 import { useReadContracts } from 'wagmi'
 
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useSubstitutedAddress } from '@/hooks/useSubstitutedAddress'
 import type { EVMABIMethod, EVMContract } from '@/store/collections'
 
 export function StateTab({ smartContract }: { smartContract: EVMContract }) {
+  const addressRaw = smartContract.contract?.address
+  const { substitutedAddress, isValid } = useSubstitutedAddress(addressRaw)
+
   const prefetchableMethods = useMemo(() => {
-    const address = smartContract.contract?.address as Address
-    const methods: EVMABIMethod[] = smartContract.contract?.abi && JSON.parse(smartContract.contract.abi)
-    if (!address || !methods) {
+    if (!smartContract.contract?.abi) {
       return []
     }
+
+    let methods: EVMABIMethod[]
+    try {
+      methods = JSON.parse(smartContract.contract.abi)
+    } catch {
+      return []
+    }
+
+    if (!isValid || !substitutedAddress || !methods) {
+      return []
+    }
+
     const filteredMethods = methods.filter(
       (method) =>
         method.inputs?.length === 0 && (method.stateMutability === 'view' || method.stateMutability === 'pure'),
     )
 
-    return filteredMethods.map((method) => {
-      return {
-        address,
-        abi: filteredMethods as Abi,
-        functionName: method.name,
-        chainId: smartContract.chainId,
-      }
-    })
-  }, [smartContract.chainId, smartContract.contract.abi, smartContract.contract?.address])
+    return filteredMethods.map((method) => ({
+      address: substitutedAddress,
+      abi: [method] as Abi,
+      functionName: method.name,
+      chainId: smartContract.chainId,
+    }))
+  }, [smartContract.chainId, smartContract.contract?.abi, isValid, substitutedAddress])
 
   const { data, isError, isLoading, refetch } = useReadContracts({
     contracts: prefetchableMethods,
   })
 
   const prevRpcUrlRef = useRef<string | undefined>(smartContract.rpcUrl)
+  const prevChainIdRef = useRef<number | undefined>(smartContract.chainId)
+  const prevAddressRef = useRef<string | undefined>(substitutedAddress)
 
   useEffect(() => {
     if (isError) {
@@ -43,11 +57,18 @@ export function StateTab({ smartContract }: { smartContract: EVMContract }) {
   }, [isError])
 
   useEffect(() => {
-    if (prevRpcUrlRef.current !== smartContract.rpcUrl && prefetchableMethods.length > 0) {
+    const rpcUrlChanged = prevRpcUrlRef.current !== smartContract.rpcUrl
+    const chainIdChanged = prevChainIdRef.current !== smartContract.chainId
+    const addressChanged = prevAddressRef.current !== substitutedAddress
+
+    if ((rpcUrlChanged || chainIdChanged || addressChanged) && prefetchableMethods.length > 0) {
       refetch()
     }
+
     prevRpcUrlRef.current = smartContract.rpcUrl
-  }, [smartContract.rpcUrl, prefetchableMethods.length, refetch])
+    prevChainIdRef.current = smartContract.chainId
+    prevAddressRef.current = substitutedAddress
+  }, [smartContract.rpcUrl, smartContract.chainId, substitutedAddress, prefetchableMethods.length, refetch])
 
   return (
     <div className="flex flex-col gap-2">

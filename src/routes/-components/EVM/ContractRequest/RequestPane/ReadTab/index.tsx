@@ -8,9 +8,9 @@ import { ReadMethod } from './ReadMethod'
 
 export function ReadTab({ smartContract }: { smartContract: EVMContract }) {
   const readableMethods = useMemo(() => {
-    const address = smartContract.contract?.address as Address
+    const address = smartContract.contract?.address
     const methods: EVMABIMethod[] = smartContract.contract?.abi && JSON.parse(smartContract.contract.abi)
-    if (!address || !methods) {
+    if (!address || address.trim() === '' || !methods) {
       return []
     }
     const infoMethods = methods.filter(
@@ -19,8 +19,8 @@ export function ReadTab({ smartContract }: { smartContract: EVMContract }) {
 
     return infoMethods.map((method) => {
       return {
-        address,
-        abi: infoMethods,
+        address: address as string,
+        abi: method,
         functionName: method.name,
       }
     })
@@ -36,14 +36,14 @@ export function ReadTab({ smartContract }: { smartContract: EVMContract }) {
           </CardContent>
         </Card>
       )}
-      {readableMethods.map((method, idx) => {
+      {readableMethods.map((method) => {
         return (
           <ReadMethod
             key={method.functionName}
             chainId={smartContract.chainId}
-            contractAddress={method.address}
+            contractAddress={method.address as Address}
             functionName={method.functionName}
-            abi={method.abi[idx]}
+            abi={method.abi}
           />
         )
       })}

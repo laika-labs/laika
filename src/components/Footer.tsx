@@ -10,9 +10,9 @@ export function Footer() {
           variant="ghost"
           size="icon"
           render={
-            <a href="https://github.com/laika-labs/laika" target="_blank">
-              <GithubIcon className="h-4 w-4" />
-              <span className="sr-only">Github</span>
+            <a href="https://github.com/laika-labs/laika" target="_blank" rel="noopener noreferrer">
+              <GithubIcon className="h-4 w-4" aria-hidden="true" />
+              <span className="sr-only">GitHub</span>
             </a>
           }
         />
@@ -20,8 +20,8 @@ export function Footer() {
           variant="ghost"
           size="icon"
           render={
-            <a href="https://twitter.com/getlaikaapp" target="_blank">
-              <TwitterIcon className="h-4 w-4" />
+            <a href="https://twitter.com/getlaikaapp" target="_blank" rel="noopener noreferrer">
+              <TwitterIcon className="h-4 w-4" aria-hidden="true" />
               <span className="sr-only">Twitter</span>
             </a>
           }

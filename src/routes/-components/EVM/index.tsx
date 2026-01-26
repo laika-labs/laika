@@ -1,31 +1,27 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Allotment, LayoutPriority, type AllotmentHandle } from 'allotment'
-import { BookTextIcon, FoldersIcon, PlusIcon, XIcon } from 'lucide-react'
 
 import { EVMProvider } from '@/components/EVMProvider'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { findItemInCollections } from '@/lib/collections'
-import { cn } from '@/lib/utils'
 import { useEVMChainsStore, type EVMChain } from '@/store/chains'
 import { useEVMCollectionStore } from '@/store/collections'
 import { useEVMTabStore } from '@/store/tabs'
 
 import { Collections } from './Collections'
-import { ContractRequest } from './ContractRequest'
-import { DocumentContent } from './Documentation/DocumentContent'
 import { DocumentList } from './Documentation/DocumentList'
+import { MainContentArea } from './MainContentArea'
+import { SidebarNavigation } from './SidebarNavigation'
 import { Toolbar } from './Toolbar'
-import { Welcome } from './Welcome'
 
 export function EVM() {
   const toolbarRef = useRef<AllotmentHandle>(null)
+  const [sidebarTab, setSidebarTab] = useState<string>('collections')
 
   const { collections, temporaryContracts, addTemporaryContract, removeTemporaryContract } = useEVMCollectionStore()
-  const { tabs, activeTabId, setActiveTab, removeTab, clearTabs, addTab } = useEVMTabStore()
+  const { tabs, removeTab, clearTabs, addTab } = useEVMTabStore()
   const { setChains } = useEVMChainsStore()
 
   const isLaptop = useMediaQuery('(min-width: 1024px)')
@@ -36,7 +32,6 @@ export function EVM() {
   }
 
   const handleRemoveTab = (tabId: string) => {
-    // Clean up temporary contract if it exists
     if (temporaryContracts[tabId]) {
       removeTemporaryContract(tabId)
     }
@@ -44,7 +39,6 @@ export function EVM() {
   }
 
   const handleClearAllTabs = () => {
-    // Clean up all temporary contracts before clearing tabs
     tabs.forEach((tabId) => {
       if (temporaryContracts[tabId]) {
         removeTemporaryContract(tabId)
@@ -87,14 +81,9 @@ export function EVM() {
     })
   }, [tabs, collections, temporaryContracts, removeTab])
 
-  const displayContractRequest = useMemo(() => {
-    if (tabs.length > 0) return <ContractRequest />
-    return <Welcome />
-  }, [tabs])
-
   return (
     <EVMProvider>
-      <Tabs defaultValue="collections" orientation="vertical" className="size-full">
+      <Tabs value={sidebarTab} onValueChange={setSidebarTab} orientation="vertical" className="size-full">
         <Allotment defaultSizes={[320]} proportionalLayout={false}>
           <Allotment.Pane
             minSize={256}
@@ -106,38 +95,7 @@ export function EVM() {
           >
             <Allotment defaultSizes={[40, 99999]}>
               <Allotment.Pane minSize={40} maxSize={40}>
-                <TooltipProvider>
-                  <TabsList className="gap-2 bg-inherit p-1.5">
-                    <Tooltip>
-                      <TabsTrigger
-                        value="collections"
-                        className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
-                        render={
-                          <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Collections" />} />
-                        }
-                      >
-                        <FoldersIcon />
-                      </TabsTrigger>
-                      <TooltipContent side="right">
-                        <p>Collections</p>
-                      </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TabsTrigger
-                        value="docs"
-                        className="aria-selected:text-primary dark:aria-selected:text-primary flex-none"
-                        render={
-                          <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Documentation" />} />
-                        }
-                      >
-                        <BookTextIcon />
-                      </TabsTrigger>
-                      <TooltipContent side="right">
-                        <p>Documentation</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TabsList>
-                </TooltipProvider>
+                <SidebarNavigation />
               </Allotment.Pane>
               <Allotment.Pane>
                 <TabsContent value="collections" className="m-0 size-full">
@@ -150,70 +108,21 @@ export function EVM() {
             </Allotment>
           </Allotment.Pane>
           <Allotment.Pane priority={LayoutPriority.Low}>
-            <TabsContent value="collections" className="m-0 size-full">
-              <Allotment
-                defaultSizes={[99999, 40]}
-                ref={toolbarRef}
-                onChange={handleToolbarChange}
-                proportionalLayout={false}
-              >
-                <Allotment.Pane priority={LayoutPriority.High}>
-                  <Allotment defaultSizes={[40, 99999]} proportionalLayout={false} vertical>
-                    <Allotment.Pane
-                      minSize={40}
-                      maxSize={40}
-                      priority={LayoutPriority.Low}
-                      className="flex overflow-x-auto!"
-                    >
-                      {tabs.map((tab) => {
-                        const found = findItemInCollections(collections, tab) || temporaryContracts[tab]
-                        if (found === undefined) {
-                          return null
-                        }
-
-                        const name = found?.name
-                        const isActive = activeTabId === tab
-
-                        return (
-                          <Button
-                            key={tab}
-                            className={cn(
-                              'text-secondary-foreground bg-background hover:bg-background group h-auto w-52 justify-between rounded-none border-r',
-                              isActive && 'bg-muted hover:bg-muted',
-                            )}
-                            onClick={() => setActiveTab(tab)}
-                          >
-                            <small className="w-44 truncate py-2 text-left text-sm leading-none font-medium">
-                              {name}
-                            </small>
-                            <span
-                              className={cn(
-                                buttonVariants({ size: 'icon' }),
-                                'text-secondary-foreground bg-background hover:bg-muted hidden group-hover:flex focus-visible:ring-0',
-                                isActive && 'bg-muted hover:bg-background flex',
-                              )}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleRemoveTab(tab)
-                              }}
-                            >
-                              <XIcon />
-                            </span>
-                          </Button>
-                        )
-                      })}
-                      <Button variant="ghost" className="h-auto w-10 rounded-none" onClick={handleAddTemporaryContract}>
-                        <PlusIcon />
-                      </Button>
-                      {activeTabId !== null && (
-                        <Button variant="ghost" className="h-auto rounded-none" onClick={handleClearAllTabs}>
-                          <small className="truncate py-2 text-sm leading-none font-medium">Close All Tabs</small>
-                        </Button>
-                      )}
-                    </Allotment.Pane>
-                    <Allotment.Pane priority={LayoutPriority.High}>{displayContractRequest}</Allotment.Pane>
-                  </Allotment>
-                </Allotment.Pane>
+            <Allotment
+              defaultSizes={[99999, 40]}
+              ref={toolbarRef}
+              onChange={handleToolbarChange}
+              proportionalLayout={false}
+            >
+              <Allotment.Pane priority={LayoutPriority.High}>
+                <MainContentArea
+                  sidebarTab={sidebarTab}
+                  onAddTab={handleAddTemporaryContract}
+                  onRemoveTab={handleRemoveTab}
+                  onClearAllTabs={handleClearAllTabs}
+                />
+              </Allotment.Pane>
+              {sidebarTab !== 'docs' && (
                 <Allotment.Pane
                   minSize={40}
                   maxSize={448}
@@ -223,11 +132,8 @@ export function EVM() {
                 >
                   <Toolbar toolbarRef={toolbarRef} />
                 </Allotment.Pane>
-              </Allotment>
-            </TabsContent>
-            <TabsContent value="docs" className="m-0 size-full">
-              <DocumentContent />
-            </TabsContent>
+              )}
+            </Allotment>
           </Allotment.Pane>
         </Allotment>
       </Tabs>

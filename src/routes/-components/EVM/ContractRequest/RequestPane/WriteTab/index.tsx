@@ -8,9 +8,9 @@ import { WriteMethod } from './WriteMethod'
 
 export function WriteTab({ smartContract }: { smartContract: EVMContract }) {
   const writeableMethods = useMemo(() => {
-    const address = smartContract.contract?.address as Address
+    const address = smartContract.contract?.address
     const methods: EVMABIMethod[] = smartContract.contract?.abi && JSON.parse(smartContract.contract.abi)
-    if (!address || !methods) {
+    if (!address || address.trim() === '' || !methods) {
       return []
     }
     const filteredMethods = methods.filter(
@@ -19,8 +19,8 @@ export function WriteTab({ smartContract }: { smartContract: EVMContract }) {
 
     return filteredMethods.map((method) => {
       return {
-        address,
-        abi: filteredMethods,
+        address: address as string,
+        abi: method,
         functionName: method.name,
       }
     })
@@ -36,14 +36,14 @@ export function WriteTab({ smartContract }: { smartContract: EVMContract }) {
           </CardContent>
         </Card>
       )}
-      {writeableMethods.map((method, idx) => {
+      {writeableMethods.map((method) => {
         return (
           <WriteMethod
             key={method.functionName}
             chainId={smartContract.chainId}
-            contractAddress={method.address}
+            contractAddress={method.address as Address}
             functionName={method.functionName}
-            abi={method.abi[idx]}
+            abi={method.abi}
           />
         )
       })}

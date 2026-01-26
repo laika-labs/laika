@@ -238,7 +238,7 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
         render={
           <Card className="text-center">
             <CardHeader className="justify-center">
-              <Plus className="size-10" />
+              <Plus className="size-10" aria-hidden="true" />
             </CardHeader>
             <CardContent>
               <CardTitle>New Request</CardTitle>
@@ -302,7 +302,7 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
                 <FormItem>
                   <FormLabel>Address (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Paste your smart contract address here." {...field} />
+                    <Input placeholder="Paste your smart contract address here…" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -315,7 +315,7 @@ export function NewRequestDialog({ onDone }: NewRequestDialogProps) {
                 <FormItem>
                   <FormLabel>ABI (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Paste your ABI here." className="h-60 overflow-y-auto" {...field} />
+                    <Textarea placeholder="Paste your ABI here…" className="h-60 overflow-y-auto" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
