@@ -38,8 +38,9 @@ Laika is a request builder for web3 - like Postman for blockchains. It allows us
 
 All state is managed through Zustand stores with persistence:
 
-- `tabs.ts`: Tab management for contract requests
-- `collections.ts`: Project collections (folders, contracts)
+- `tabs.ts`: Tab management for contract requests (`EVMTabStore` interface)
+- `collections.ts`: Project collections (folders, contracts) with helper functions
+- `environments.ts`: Global and local environment variables
 - `chains.ts`: Blockchain network management
 - `responses.ts`: Contract call response storage
 - `docs.ts`: Documentation state
@@ -48,9 +49,16 @@ All state is managed through Zustand stores with persistence:
 
 1. **Collections**: Hierarchical organization (Collections → Folders → Smart Contracts)
 2. **Contract Interaction**: Read/Write methods with ABI parsing
-3. **Multi-chain Support**: EVM blockchain switching via wagmi
-4. **Code Generation**: JavaScript code snippets (web3.js, ethers.js)
-5. **Documentation**: Integrated ABI documentation viewer
+3. **Environment Variables**: Global and local environments with `{{variable}}` substitution
+4. **Multi-chain Support**: EVM blockchain switching via wagmi
+5. **Code Generation**: JavaScript code snippets (web3.js, ethers.js)
+6. **Documentation**: Integrated ABI documentation viewer
+
+### Custom Hooks
+
+- `useContractMethod`: Shared logic for contract read/write methods (args, validation, substitution)
+- `useVariableManager`: CRUD operations for environment variables
+- `useSubstitutedAddress`: Address variable substitution and validation
 
 ### Code Organization Principles
 
@@ -89,6 +97,8 @@ The app uses a fixed layout with Allotment panes:
 - `src/routes/__root.tsx`: Root layout with providers and pane structure
 - `src/routeTree.gen.ts`: Auto-generated route tree (don't edit manually)
 - `src/store/collections.ts`: Core data model for contracts and collections
+- `src/store/environments.ts`: Environment variable management
+- `src/lib/environment.ts`: Variable substitution utilities
 
 ### Code Generation
 

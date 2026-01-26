@@ -8,6 +8,7 @@ Laika is a request builder for web3 - like Postman for blockchains. It allows yo
 - **Smart Contract Interaction**: Universal UI for every ABI with read/write method support
 - **Request Management**: Send and sign transactions using multiple wallets via [RainbowKit](https://www.rainbowkit.com/)
 - **Collections & Organization**: Hierarchical project organization (Collections → Folders → Smart Contracts)
+- **Environment Variables**: Global and local environment variables with `{{variable}}` syntax for dynamic values
 - **Code Generation**: Generate JavaScript code snippets (web3.js, ethers.js) from contract interactions
 - **Integrated Documentation**: Built-in ABI documentation viewer with Monaco Editor
 - **Multi-tab Workspace**: Manage multiple contract requests simultaneously
@@ -43,7 +44,8 @@ bun run dev
 1. **Connect Wallet**: Select your network.
 2. **Contract Interaction**: Enter a contract address. Laika fetches the ABI and displays methods.
 3. **Execute Requests**: Fill parameters, send requests, and view responses.
-4. **Manage Tabs**: Manage all requests through tabs on the workspace
+4. **Environment Variables**: Use `{{variableName}}` syntax in addresses and parameters. Manage global and local environments via the dropdown.
+5. **Manage Tabs**: Manage all requests through tabs on the workspace
 
 ## Documentation
 
