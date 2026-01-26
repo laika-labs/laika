@@ -74,7 +74,39 @@ export interface EVMCollectionStore {
   removeTemporaryContract: (id: string) => void
 }
 
-const collections: EVMCollection[] = [
+// Helper type for contract property updates
+type ContractPropertyUpdater<T> = (contract: EVMContract, value: T) => EVMContract
+
+// Helper function to update a contract property in collections or temporary contracts
+function updateContractProperty<T>(
+  state: Pick<EVMCollectionStore, 'collections' | 'temporaryContracts'>,
+  id: string,
+  value: T,
+  updater: ContractPropertyUpdater<T>,
+): Partial<Pick<EVMCollectionStore, 'collections' | 'temporaryContracts'>> {
+  const item = findItemInCollections(state.collections, id)
+
+  if (item && item.type === EVMItemType.SmartContract) {
+    // Create a new collections array with the updated contract
+    const updatedContract = updater(item, value)
+    Object.assign(item, updatedContract)
+    return { collections: [...state.collections] }
+  }
+
+  const tempContract = state.temporaryContracts[id]
+  if (tempContract) {
+    return {
+      temporaryContracts: {
+        ...state.temporaryContracts,
+        [id]: updater(tempContract, value),
+      },
+    }
+  }
+
+  return {}
+}
+
+const defaultCollections: EVMCollection[] = [
   {
     id: uuidv4(),
     name: 'Example Contracts (Sepolia)',
@@ -98,74 +130,67 @@ const collections: EVMCollection[] = [
 export const useEVMCollectionStore = create<EVMCollectionStore>()(
   persist(
     (set) => ({
-      collections: [...collections],
+      collections: [...defaultCollections],
       temporaryContracts: {},
+
       addCollection: (name) => {
         const id = uuidv4()
-        set((state) => {
-          const collection: EVMCollection = {
-            id,
-            name: name ?? 'New Collection',
-            type: EVMItemType.Collection,
-            isOpen: true,
-            items: [],
-          }
-
-          return { collections: [...state.collections, collection] }
-        })
+        set((state) => ({
+          collections: [
+            ...state.collections,
+            {
+              id,
+              name: name ?? 'New Collection',
+              type: EVMItemType.Collection,
+              isOpen: true,
+              items: [],
+            },
+          ],
+        }))
         return id
       },
+
       removeCollection: (id: string) =>
         set((state) => ({
           collections: state.collections.filter((c) => c.id !== id),
         })),
+
       renameItem: (id: string, name: string) =>
         set((state) => {
           const item = findItemInCollections(state.collections, id)
-
           if (item) {
             item.name = name
           }
-
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         }),
+
       toggleOpen: (id: string) =>
         set((state) => {
           const item = findItemInCollections(state.collections, id)
-
           if (item && item.type !== EVMItemType.SmartContract) {
             item.isOpen = !item.isOpen
           }
-
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         }),
+
       addFolder: (id, name) => {
         const folderId = uuidv4()
         set((state) => {
-          const folder: EVMFolder = {
-            id: folderId,
-            name: name ?? 'New Folder',
-            type: EVMItemType.Folder,
-            isOpen: true,
-            items: [],
-          }
-
           const item = findItemInCollections(state.collections, id)
-
           if (item && item.type !== EVMItemType.SmartContract) {
-            item.items.push(folder)
+            item.items.push({
+              id: folderId,
+              name: name ?? 'New Folder',
+              type: EVMItemType.Folder,
+              isOpen: true,
+              items: [],
+            })
           }
-
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         })
         return folderId
       },
+
       addSmartContract: (id: string, cb: (contract: EVMContract) => void) =>
         set((state) => {
           const contract: EVMContract = {
@@ -176,154 +201,81 @@ export const useEVMCollectionStore = create<EVMCollectionStore>()(
           }
 
           const item = findItemInCollections(state.collections, id)
-
           if (item && item.type !== EVMItemType.SmartContract) {
             item.items.push(contract)
           }
 
           cb(contract)
-
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         }),
+
       updateContractChainId: (id: string, chainId: number) =>
-        set((state) => {
-          const item = findItemInCollections(state.collections, id)
+        set((state) =>
+          updateContractProperty(state, id, chainId, (contract, value) => ({
+            ...contract,
+            chainId: value,
+          })),
+        ),
 
-          if (item && item.type === EVMItemType.SmartContract) {
-            item.chainId = chainId
-            return {
-              collections: state.collections,
-            }
-          }
-
-          const tempContract = state.temporaryContracts[id]
-          if (tempContract) {
-            return {
-              temporaryContracts: {
-                ...state.temporaryContracts,
-                [id]: { ...tempContract, chainId },
-              },
-            }
-          }
-
-          return state
-        }),
       updateContractRpcUrl: (id: string, rpcUrl: string) =>
-        set((state) => {
-          const item = findItemInCollections(state.collections, id)
+        set((state) =>
+          updateContractProperty(state, id, rpcUrl, (contract, value) => ({
+            ...contract,
+            rpcUrl: value,
+          })),
+        ),
 
-          if (item && item.type === EVMItemType.SmartContract) {
-            item.rpcUrl = rpcUrl
-            return {
-              collections: state.collections,
-            }
-          }
-
-          const tempContract = state.temporaryContracts[id]
-          if (tempContract) {
-            return {
-              temporaryContracts: {
-                ...state.temporaryContracts,
-                [id]: { ...tempContract, rpcUrl },
-              },
-            }
-          }
-
-          return state
-        }),
       updateContractAddress: (id: string, address: string) =>
-        set((state) => {
-          const item = findItemInCollections(state.collections, id)
+        set((state) =>
+          updateContractProperty(state, id, address, (contract, value) => ({
+            ...contract,
+            contract: { ...contract.contract, address: value },
+          })),
+        ),
 
-          if (item && item.type === EVMItemType.SmartContract) {
-            item.contract.address = address
-            return {
-              collections: state.collections,
-            }
-          }
-
-          const tempContract = state.temporaryContracts[id]
-          if (tempContract) {
-            return {
-              temporaryContracts: {
-                ...state.temporaryContracts,
-                [id]: {
-                  ...tempContract,
-                  contract: { ...tempContract.contract, address },
-                },
-              },
-            }
-          }
-
-          return state
-        }),
       updateContractABI: (id: string, abi: string) =>
-        set((state) => {
-          const item = findItemInCollections(state.collections, id)
+        set((state) =>
+          updateContractProperty(state, id, abi, (contract, value) => ({
+            ...contract,
+            contract: { ...contract.contract, abi: value },
+          })),
+        ),
 
-          if (item && item.type === EVMItemType.SmartContract) {
-            item.contract.abi = abi
-            return { collections: state.collections }
-          }
-
-          const tempContract = state.temporaryContracts[id]
-          if (tempContract) {
-            return {
-              temporaryContracts: {
-                ...state.temporaryContracts,
-                [id]: {
-                  ...tempContract,
-                  contract: { ...tempContract.contract, abi },
-                },
-              },
-            }
-          }
-
-          return state
-        }),
       updateContractComment: (id: string, methodName: string, comment: string) =>
         set((state) => {
           const item = findItemInCollections(state.collections, id)
 
-          if (item && item.type === EVMItemType.SmartContract && item.contract && item.contract.abi) {
-            const abi = JSON.parse(item.contract.abi)
-            const newAbi = abi.map((method: EVMABIMethod) => {
-              if (method.name === methodName) {
-                method.comment = comment
-              }
-              return method
-            })
+          if (item && item.type === EVMItemType.SmartContract && item.contract?.abi) {
+            const abi = JSON.parse(item.contract.abi) as EVMABIMethod[]
+            const newAbi = abi.map((method) => (method.name === methodName ? { ...method, comment } : method))
             item.contract.abi = JSON.stringify(newAbi)
           }
 
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         }),
 
       removeItem: (id: string) =>
         set((state) => {
           removeItemInCollection(state.collections, id)
-
-          return {
-            collections: state.collections,
-          }
+          return { collections: [...state.collections] }
         }),
+
       addTemporaryContract: () => {
         const id = uuidv4()
-        const contract: EVMContract = {
-          id,
-          name: 'New Smart Contract',
-          type: EVMItemType.SmartContract,
-          contract: {},
-        }
         set((state) => ({
-          temporaryContracts: { ...state.temporaryContracts, [id]: contract },
+          temporaryContracts: {
+            ...state.temporaryContracts,
+            [id]: {
+              id,
+              name: 'New Smart Contract',
+              type: EVMItemType.SmartContract,
+              contract: {},
+            },
+          },
         }))
         return id
       },
+
       convertTemporaryToPermanent: (temporaryId: string, parentId: string) => {
         let newId = ''
         set((state) => {
@@ -351,22 +303,24 @@ export const useEVMCollectionStore = create<EVMCollectionStore>()(
           newId = contract.id
           parent.items.push(contract)
 
-          const temporaryContracts = { ...state.temporaryContracts }
-          delete temporaryContracts[temporaryId]
+          const remainingContracts = Object.fromEntries(
+            Object.entries(state.temporaryContracts).filter(([key]) => key !== temporaryId),
+          )
 
           return {
-            collections: state.collections,
-            temporaryContracts,
+            collections: [...state.collections],
+            temporaryContracts: remainingContracts,
           }
         })
         return newId
       },
+
       removeTemporaryContract: (id: string) =>
-        set((state) => {
-          const temporaryContracts = { ...state.temporaryContracts }
-          delete temporaryContracts[id]
-          return { temporaryContracts }
-        }),
+        set((state) => ({
+          temporaryContracts: Object.fromEntries(
+            Object.entries(state.temporaryContracts).filter(([key]) => key !== id),
+          ),
+        })),
     }),
     {
       name: 'evmCollections',

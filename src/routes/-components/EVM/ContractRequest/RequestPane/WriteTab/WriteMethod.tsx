@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { RotateCwIcon, SendIcon } from 'lucide-react'
 import type { Address } from 'viem'
@@ -7,10 +7,11 @@ import { useSwitchChain, useWriteContract } from 'wagmi'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
+import { useContractMethod } from '@/hooks/useContractMethod'
+import type { EVMABIMethod } from '@/store/collections'
 import { useResponseStore } from '@/store/responses'
+
+import { MethodInputs } from '../MethodInputs'
 
 export function WriteMethod({
   chainId,
@@ -21,84 +22,86 @@ export function WriteMethod({
   chainId?: number
   functionName: string
   abi: EVMABIMethod
-  contractAddress: Address
+  contractAddress: string | Address
 }) {
-  const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
-
   const { pushResponse } = useResponseStore()
-
   const { switchChain } = useSwitchChain()
-
   const { writeContract, isPending } = useWriteContract({})
 
-  const handleWriteClick = () => {
-    writeContract(
-      {
-        abi: [abi],
-        address: contractAddress,
-        functionName,
-        args,
-        chainId: chainId ? chainId : mainnet.id,
-      },
-      {
-        onSettled(data, error) {
-          if (error) {
-            return pushResponse({
+  const { args, substitutedArgs, substitutedAddress, handleInputChange, validateAndExecute } = useContractMethod({
+    abi,
+    contractAddress,
+  })
+
+  const effectiveChainId = chainId ?? mainnet.id
+
+  const handleWriteClick = useCallback(() => {
+    validateAndExecute(() => {
+      if (!substitutedAddress) return
+
+      writeContract(
+        {
+          abi: [abi],
+          address: substitutedAddress,
+          functionName,
+          args: substitutedArgs,
+          chainId: effectiveChainId,
+        },
+        {
+          onSettled(data, error) {
+            if (error) {
+              pushResponse({
+                type: 'WRITE',
+                functionName,
+                chainId: effectiveChainId,
+                address: substitutedAddress,
+                error,
+              })
+              return
+            }
+
+            pushResponse({
               type: 'WRITE',
               functionName,
-              chainId: chainId ? chainId : mainnet.id,
-              address: contractAddress,
-              error,
+              chainId: effectiveChainId,
+              address: substitutedAddress,
+              txHash: data,
             })
-          }
-
-          return pushResponse({
-            type: 'WRITE',
-            functionName,
-            chainId: chainId ? chainId : mainnet.id,
-            address: contractAddress,
-            txHash: data,
-          })
+          },
         },
-      },
-    )
-  }
+      )
+    })
+  }, [
+    validateAndExecute,
+    substitutedAddress,
+    writeContract,
+    abi,
+    functionName,
+    substitutedArgs,
+    effectiveChainId,
+    pushResponse,
+  ])
 
-  const handleSwitchNetwork = () => {
+  const handleSwitchNetwork = useCallback(() => {
     if (chainId) {
       switchChain({ chainId })
     }
-  }
+  }, [chainId, switchChain])
 
   return (
     <Card size="sm">
       <CardHeader>
         <CardTitle className="text-muted-foreground font-mono">{functionName}</CardTitle>
       </CardHeader>
-      {abi && abi.inputs && abi.inputs.length > 0 && (
+      {abi.inputs.length > 0 && (
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              {abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
-                const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-                  const newArgs = [...args]
-                  newArgs[idx] = event.target.value
-                  setArgs(newArgs)
-                }
-                return (
-                  <div key={`${field.type}-${field.name}-${idx}`} className="flex flex-col space-y-1.5">
-                    <Label htmlFor={`readInput-${idx}`}>{`${field.type} ${field.name}`}</Label>
-                    <Input
-                      id={`readInput-${idx}`}
-                      placeholder={field.type}
-                      value={args[idx] || ''}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-          </form>
+          <MethodInputs
+            functionName={functionName}
+            inputs={abi.inputs}
+            args={args}
+            onInputChange={handleInputChange}
+            inputIdPrefix="writeInput"
+          />
         </CardContent>
       )}
       <CardFooter>

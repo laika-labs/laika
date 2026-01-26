@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { RotateCwIcon, ScanSearchIcon } from 'lucide-react'
 import type { Address } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -6,10 +6,11 @@ import { useReadContract } from 'wagmi'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { EVMABIMethod, EVMABIMethodInputsOutputs } from '@/store/collections'
+import { useContractMethod } from '@/hooks/useContractMethod'
+import type { EVMABIMethod } from '@/store/collections'
 import { useResponseStore } from '@/store/responses'
+
+import { MethodInputs } from '../MethodInputs'
 
 export function ReadMethod({
   chainId,
@@ -20,77 +21,71 @@ export function ReadMethod({
   chainId?: number
   functionName: string
   abi: EVMABIMethod
-  contractAddress: Address
+  contractAddress: string | Address
 }) {
-  const [args, setArgs] = useState<Array<string>>(new Array(abi.inputs.length).fill(''))
   const { pushResponse } = useResponseStore()
+  const { args, substitutedArgs, substitutedAddress, handleInputChange, validateAndExecute } = useContractMethod({
+    abi,
+    contractAddress,
+  })
+
+  const defaultAddress = '0x0000000000000000000000000000000000000000' as Address
+  const effectiveChainId = chainId ?? mainnet.id
 
   const { data, error, isRefetching, isFetchedAfterMount, refetch } = useReadContract({
-    address: contractAddress,
+    address: substitutedAddress || defaultAddress,
     abi: [abi],
     functionName,
-    args,
-    chainId: chainId ? chainId : mainnet.id,
+    args: substitutedArgs,
+    chainId: effectiveChainId,
     query: {
       enabled: false,
     },
   })
 
-  const handleReadClick = () => {
-    refetch()
-  }
+  const handleReadClick = useCallback(() => {
+    validateAndExecute(() => refetch())
+  }, [validateAndExecute, refetch])
 
   useEffect(() => {
     if (isFetchedAfterMount && !isRefetching) {
+      const responseAddress: Address = substitutedAddress || defaultAddress
+
       if (error) {
-        return pushResponse({
+        pushResponse({
           type: 'READ',
           functionName,
-          chainId: chainId ? chainId : mainnet.id,
-          address: contractAddress,
+          chainId: effectiveChainId,
+          address: responseAddress,
           error,
         })
+        return
       }
 
-      return pushResponse({
+      pushResponse({
         type: 'READ',
         functionName,
-        chainId: chainId ? chainId : mainnet.id,
-        address: contractAddress,
+        chainId: effectiveChainId,
+        address: responseAddress,
         result: JSON.stringify(data?.toString()),
       })
     }
-  }, [chainId, contractAddress, data, error, functionName, isFetchedAfterMount, isRefetching, pushResponse])
+  }, [data, error, functionName, isFetchedAfterMount, isRefetching, pushResponse, substitutedAddress, effectiveChainId])
 
   return (
     <Card size="sm">
       <CardHeader>
         <CardTitle className="text-muted-foreground font-mono">{functionName}</CardTitle>
       </CardHeader>
-      {abi && abi.inputs && abi.inputs.length > 0 && (
+      {abi.inputs.length > 0 && (
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              {abi.inputs.map((field: EVMABIMethodInputsOutputs, idx: number) => {
-                const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-                  const newArgs = [...args]
-                  newArgs[idx] = event.target.value
-                  setArgs(newArgs)
-                }
-                return (
-                  <div key={`${field.type}-${field.name}-${idx}`} className="flex flex-col space-y-1.5">
-                    <Label htmlFor={`readInput-${idx}`}>{`${field.type} ${field.name}`}</Label>
-                    <Input
-                      id={`readInput-${idx}`}
-                      placeholder={field.type}
-                      value={args[idx] || ''}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-          </form>
+          <MethodInputs
+            functionName={functionName}
+            inputs={abi.inputs}
+            args={args}
+            onInputChange={handleInputChange}
+            inputIdPrefix="readInput"
+          />
         </CardContent>
       )}
       <CardFooter>
